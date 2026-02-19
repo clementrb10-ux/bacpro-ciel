@@ -54,15 +54,19 @@ body {
 }
 
 /* CENTER CONTENT */
-.header-content {
+.header {
+    min-height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     text-align: center;
-    margin-top: 140px;
-    padding: 0 20px;
+
 }
 
 .header-content h1 {
     font-size: 2.6em;
-    margin-bottom: 15px;
+    margin-bottom: 30px;
 }
 
 .header-content p {
@@ -158,5 +162,81 @@ footer {
     padding: 15px;
 }
 
+.nav {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+}
+
+.nav a {
+    margin-left: 25px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+.nav a:hover {
+    color: #00c3ff;
+}
+
+.card {
+    text-decoration: none;
+    color: inherit;
+    background: rgba(255, 255, 255, 0.308);
+    padding: 30px;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+body.home {
+    background: url("fond.jpg") no-repeat center center 0px;
+    background-size: cover;
+}
+
+body.matieres {
+    background: url("fond2.jpg") no-repeat center center fixed;
+    background-size: cover;
+}
+
+body.presentation-page {
+    background: url("fond-decouvre-filiere.png") no-repeat center -50px fixed;
+    background-size: 100% auto; 
+}
+
+body.projets {
+    background: url("fond-projet.png") no-repeat center -100px fixed;
+    background-size: 100% auto;
+}
+
+/* FOND CYBERSECURITE */
+body.cyber {
+    background: url("fond-cyber.png") no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* FOND INFORMATIQUE & RESEAUX */
+body.info-reseaux {
+    background: url("fond-info-reseaux.png") no-repeat center center fixed;
+    background-size: cover;
+}
+/* FOND ELECTRONIQUE */
+body.electro {
+    background: url("fond-electro.png") no-repeat center center fixed;
+    background-size: cover;
+}
+
+.scan-text{
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow:
+        0 0 5px #00eaff,
+        0 0 10px #00eaff,
+        0 0 20px #00eaff;
+}
 
 
