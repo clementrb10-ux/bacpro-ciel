@@ -1,18 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Découvrir la filière CIEL</title>
-<link rel="stylesheet" href="style.css">
+<title>Découvrir la filière – Bac Pro CIEL</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+  // Redirection selon l'appareil
+  if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      window.location.href = "mobile.html";
+  } else {
+      window.location.href = "presentation.html";
+  }
+</script>
 </head>
 
 <body>
-
-<h1>Découvrir la filière CIEL</h1>
-
-<p>
-Formation Bac Pro CIEL
+<p style="text-align:center; margin-top:50px; font-family:Arial, sans-serif;">
+Redirection en cours… Si rien ne se passe, <a href="presentation.html">cliquez ici</a>.
 </p>
-
 </body>
 </html>

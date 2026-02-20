@@ -1,70 +1,65 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>Bac Pro CIEL</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bac Pro CIEL</title>
+<link rel="stylesheet" href="style.css">
+<script>
+  // Redirection vers mobile si besoin
+  if (/Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent)) {
+      window.location.replace("mobile.html");
+  }
+</script>
 </head>
 
 <body class="home">
 
 <header class="header">
+  <nav class="nav">
+    <a href="index.html">Accueil</a>
+    <a href="matieres.html">Matières</a>
+    <a href="projets.html">Projets</a>
+  </nav>
 
-    <!-- MENU -->
-    <nav class="nav">
-        <a href="index.html">Accueil</a>
-        <a href="matieres.html">Matières</a>
-        <a href="projets.html">Projets</a>
-    </nav>
+  <div class="header-content">
+    <h1>Bienvenue sur le site du Bac Pro CIEL</h1>
+    <p>Cybersécurité • Informatique • Réseaux • Électronique</p>
 
-    <div class="header-content">
-        <h1>Bienvenue sur le site du Bac Pro CIEL</h1>
-        <p>Cybersécurité • Informatique • Réseaux • Électronique</p>
-
-        <div class="buttons">
-            <a href="presentation.html" class="btn primary">📘 Découvrir la filière</a>
-            <a href="https://www.onisep.fr/ressources/univers-formation/formations/lycees/bac-pro-cybersecurite-informatique-et-reseaux-electronique" 
-   class="btn secondary" 
-   target="_blank">
-   → En savoir plus
-</a>
-
-        </div>
-
-        <div class="description">
-            Le bac professionnel CIEL forme aux métiers du numérique,
-            des réseaux et de la sécurité informatique.
-        </div>
+    <div class="buttons">
+      <a href="presentation.html" class="btn primary">📘 Découvrir la filière</a>
+      <a href="https://www.onisep.fr/ressources/univers-formation/formations/lycees/bac-pro-cybersecurite-informatique-et-reseaux-electronique" 
+         class="btn secondary" target="_blank">
+         → En savoir plus
+      </a>
     </div>
+
+    <div class="description">
+      Le bac professionnel CIEL forme aux métiers du numérique, des réseaux et de la sécurité informatique.
+    </div>
+  </div>
 </header>
 
 <section class="presentation">
-    <h2>Qu’est-ce que le Bac Pro CIEL ?</h2>
-    <p>
-        Le Bac Pro CIEL forme des techniciens spécialisés
-        dans le numérique et la cybersécurité.
-    </p>
+  <h2>Qu’est-ce que le Bac Pro CIEL ?</h2>
+  <p>Le Bac Pro CIEL forme des techniciens spécialisés dans le numérique et la cybersécurité.</p>
 
-    <div class="cards">
-        </a>
-<a href="cybersecurite.html" class="card">
-    <h3>🔐 Cybersécurité</h3>
-</a>
-
- <a href="informatique & reseaux.html" class="card">
-     <h3>💻 Informatique & Réseaux</h3>
-</a>
-
-<a href="electronique.html" class="card">
-    <h3>⚙️ Électronique</h3>
- </a>
-
-    </div>
+  <div class="cards">
+    <a href="cybersecurite.html" class="card">
+      <h3>🔐 Cybersécurité</h3>
+    </a>
+    <a href="informatique-reseaux.html" class="card">
+      <h3>💻 Informatique & Réseaux</h3>
+    </a>
+    <a href="electronique.html" class="card">
+      <h3>⚙️ Électronique</h3>
+    </a>
+  </div>
 </section>
 
 <footer>
-    © 2026 – Bac Pro CIEL
+  © 2026 – Bac Pro CIEL
 </footer>
 
-<body class="home">
+</body>
 </html>

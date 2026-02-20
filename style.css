@@ -9,7 +9,7 @@
 body {
     margin: 0;
     padding: 0;
-    background: url("fond.jpg") no-repeat center 0px;
+    background: url("fond.png") no-repeat center 0px;
 background-size: cover;
 }
 
@@ -239,8 +239,13 @@ body.electro {
         0 0 20px #00eaff;
 }
 
-/* QR CODE */
-body.section {
-    background: url("QR Code.png") no-repeat center center fixed;
-    background-size: cover;
+/* IMAGE QR CODE */
+.qr-image {
+    width: 220px;
+    height: auto;
+    background: rgba(255, 255, 255, 0.473);
+    padding: 20px;
+    border-radius: 20px;
+    display: block;
+    margin: -250px auto;
 }
