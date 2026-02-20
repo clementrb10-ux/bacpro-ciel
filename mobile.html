@@ -8,7 +8,7 @@
     <style>
         body {
             margin: 0;
-            height: 100vh;
+            min-height: 100vh;
             background: url("fond-mobile.png") no-repeat center center;
             background-size: cover;
             font-family: Arial, sans-serif;
@@ -34,6 +34,133 @@
             text-decoration: none;
             border-radius: 8px;
             font-weight: bold;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            width: 80%;
+        }
+
+        .btn-quiz {
+            background: #7c3aed;
+            margin-top: 10px;
+        }
+
+        #quiz-container {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            overflow-y: auto;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+            color: white;
+        }
+
+        #quiz-container h2 {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        #progress {
+            font-size: 14px;
+            color: #00c3ff;
+            margin-bottom: 20px;
+        }
+
+        #question-text {
+            font-size: 18px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .answer-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 12px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            box-sizing: border-box;
+            transition: 0.2s;
+        }
+
+        .answer-btn.correct {
+            background: rgba(0, 200, 100, 0.4);
+            border-color: #00c864;
+        }
+
+        .answer-btn.wrong {
+            background: rgba(220, 50, 50, 0.4);
+            border-color: #dc3232;
+        }
+
+        #feedback {
+            font-size: 15px;
+            margin: 10px 0 20px;
+            min-height: 20px;
+            color: #ffd700;
+        }
+
+        #next-btn {
+            display: none;
+            padding: 12px 30px;
+            background: #00c3ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #result-container {
+            display: none;
+        }
+
+        #result-container h2 {
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+
+        #score-text {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #00c3ff;
+        }
+
+        #result-msg {
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        #restart-btn {
+            padding: 12px 30px;
+            background: #7c3aed;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #close-quiz {
+            position: fixed;
+            top: 15px; right: 15px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 20px;
+            width: 35px; height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -44,7 +171,205 @@
         <h2>Bac Pro CIEL</h2>
         <p></p>
         <a href="index.html" class="btn">Voir le site complet</a>
+        <br>
+        <button class="btn btn-quiz" onclick="startQuiz()">🎯 Commencer le quiz</button>
     </div>
+
+    <div id="quiz-container">
+        <button id="close-quiz" onclick="closeQuiz()">✕</button>
+
+        <div id="question-screen">
+            <h2>Quiz Bac Pro CIEL</h2>
+            <div id="progress"></div>
+            <div id="question-text"></div>
+            <div id="answers"></div>
+            <div id="feedback"></div>
+            <button id="next-btn" onclick="nextQuestion()">Question suivante →</button>
+        </div>
+
+        <div id="result-container">
+            <h2>Quiz terminé ! 🎉</h2>
+            <div id="score-text"></div>
+            <div id="result-msg"></div>
+            <button id="restart-btn" onclick="restartQuiz()">🔄 Recommencer</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                type: "qcm",
+                question: "Que signifie l'acronyme CIEL ?",
+                answers: [
+                    "Cybersécurité, Informatique, Électronique, Logiciel",
+                    "Cybersécurité, Informatique et réseaux, Électronique",
+                    "Conception Informatique et Électronique en Lycée",
+                    "Cybersécurité Industrielle et Électronique Locale"
+                ],
+                correct: 1
+            },
+            {
+                type: "vrai-faux",
+                question: "Le Bac Pro CIEL se prépare en 3 ans après la 3ème.",
+                answers: ["Vrai", "Faux"],
+                correct: 0
+            },
+            {
+                type: "qcm",
+                question: "Lequel de ces métiers est accessible après un Bac Pro CIEL ?",
+                answers: [
+                    "Technicien réseau",
+                    "Chirurgien",
+                    "Architecte",
+                    "Comptable"
+                ],
+                correct: 0
+            },
+            {
+                type: "vrai-faux",
+                question: "Le Bac Pro CIEL permet de poursuivre ses études en BTS.",
+                answers: ["Vrai", "Faux"],
+                correct: 0
+            },
+            {
+                type: "qcm",
+                question: "Quelle est la durée des périodes de stage (PFMP) en Bac Pro CIEL ?",
+                answers: [
+                    "4 semaines au total",
+                    "22 semaines au total",
+                    "8 semaines au total",
+                    "1 an au total"
+                ],
+                correct: 1
+            },
+            {
+                type: "vrai-faux",
+                question: "La cybersécurité est une des spécialités du Bac Pro CIEL.",
+                answers: ["Vrai", "Faux"],
+                correct: 0
+            },
+            {
+                type: "qcm",
+                question: "Quel BTS est directement dans la continuité du Bac Pro CIEL ?",
+                answers: [
+                    "BTS Comptabilité",
+                    "BTS SIO (Services Informatiques aux Organisations)",
+                    "BTS Tourisme",
+                    "BTS Électrotechnique"
+                ],
+                correct: 1
+            },
+            {
+                type: "vrai-faux",
+                question: "Le Bac Pro CIEL forme uniquement à l'électronique.",
+                answers: ["Vrai", "Faux"],
+                correct: 1
+            },
+            {
+                type: "qcm",
+                question: "Qu'est-ce qu'un réseau informatique ?",
+                answers: [
+                    "Un ensemble de câbles électriques",
+                    "Un ensemble d'appareils connectés pour communiquer et partager des ressources",
+                    "Un logiciel de sécurité",
+                    "Un type de processeur"
+                ],
+                correct: 1
+            },
+            {
+                type: "vrai-faux",
+                question: "Après un Bac Pro CIEL, il est impossible d'aller à l'université.",
+                answers: ["Vrai", "Faux"],
+                correct: 1
+            }
+        ];
+
+        let current = 0;
+        let score = 0;
+        let answered = false;
+
+        function startQuiz() {
+            current = 0;
+            score = 0;
+            document.getElementById("quiz-container").style.display = "block";
+            document.getElementById("result-container").style.display = "none";
+            document.getElementById("question-screen").style.display = "block";
+            showQuestion();
+        }
+
+        function closeQuiz() {
+            document.getElementById("quiz-container").style.display = "none";
+        }
+
+        function showQuestion() {
+            answered = false;
+            const q = questions[current];
+            document.getElementById("progress").textContent = "Question " + (current + 1) + " / " + questions.length;
+            document.getElementById("question-text").textContent = q.question;
+            document.getElementById("feedback").textContent = "";
+            document.getElementById("next-btn").style.display = "none";
+
+            const answersDiv = document.getElementById("answers");
+            answersDiv.innerHTML = "";
+            q.answers.forEach(function(ans, i) {
+                const btn = document.createElement("button");
+                btn.className = "answer-btn";
+                btn.textContent = ans;
+                btn.onclick = function() { selectAnswer(i); };
+                answersDiv.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(index) {
+            if (answered) return;
+            answered = true;
+
+            const q = questions[current];
+            const btns = document.querySelectorAll(".answer-btn");
+
+            btns.forEach(function(btn, i) {
+                btn.onclick = null;
+                if (i === q.correct) btn.classList.add("correct");
+                else if (i === index) btn.classList.add("wrong");
+            });
+
+            if (index === q.correct) {
+                score++;
+                document.getElementById("feedback").textContent = "✅ Bonne réponse !";
+            } else {
+                document.getElementById("feedback").textContent = "❌ Mauvaise réponse. La bonne réponse était : " + q.answers[q.correct];
+            }
+
+            if (current < questions.length - 1) {
+                document.getElementById("next-btn").style.display = "inline-block";
+            } else {
+                setTimeout(showResult, 1200);
+            }
+        }
+
+        function nextQuestion() {
+            current++;
+            showQuestion();
+        }
+
+        function showResult() {
+            document.getElementById("question-screen").style.display = "none";
+            document.getElementById("result-container").style.display = "block";
+            document.getElementById("score-text").textContent = score + " / " + questions.length;
+
+            let msg = "";
+            if (score <= 3) msg = "Tu devrais réviser un peu le Bac Pro CIEL 😅 N'hésite pas à explorer le site !";
+            else if (score <= 6) msg = "Pas mal ! Tu connais les bases du Bac Pro CIEL 👍";
+            else if (score <= 9) msg = "Très bien ! Tu maîtrises bien la filière CIEL 🎓";
+            else msg = "Parfait ! Tu es un expert du Bac Pro CIEL 🏆";
+
+            document.getElementById("result-msg").textContent = msg;
+        }
+
+        function restartQuiz() {
+            startQuiz();
+        }
+    </script>
 
 </body>
 </html>
