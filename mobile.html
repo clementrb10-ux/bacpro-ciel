@@ -14,35 +14,21 @@
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
-            align-items: flex-end;
+            align-items: center;
             text-align: center;
             color: white;
         }
 
-        .content {
-            background: rgba(0, 0, 0, 0.6);
-            padding: 20px;
-            width: 100%;
-        }
-
-        .btn {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 12px 20px;
-            background: #00c3ff;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
-            width: 80%;
-        }
-
         .btn-quiz {
+            display: inline-block;
+            padding: 15px 30px;
             background: #7c3aed;
-            margin-top: 10px;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
         }
 
         #quiz-container {
@@ -167,13 +153,7 @@
 
 <body>
 
-    <div class="content">
-        <h2>Bac Pro CIEL</h2>
-        <p></p>
-        <a href="index.html" class="btn">Voir le site complet</a>
-        <br>
-        <button class="btn btn-quiz" onclick="startQuiz()">🎯 Commencer le quiz</button>
-    </div>
+    <button class="btn-quiz" onclick="startQuiz()">🎯 Commencer le quiz</button>
 
     <div id="quiz-container">
         <button id="close-quiz" onclick="closeQuiz()">✕</button>
