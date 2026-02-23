@@ -2,31 +2,803 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>– CIEL</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projets – Bac Pro CIEL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #00f5ff;
+            --blue: #0066ff;
+            --card-bg: rgba(0, 20, 50, 0.6);
+            --glow: 0 0 20px rgba(0, 245, 255, 0.4);
+            --glow-strong: 0 0 40px rgba(0, 245, 255, 0.7);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: #010810;
+            background-image: url('fond-projet.png');
+            background-size: cover;
+            background-position: center top;
+            background-attachment: fixed;
+            color: #c8e8ff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 17px;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(1,8,16,0.45) 0%, rgba(0,10,30,0.65) 40%, rgba(0,5,20,0.85) 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            top: -100%;
+            left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+            opacity: 0.3;
+            animation: scan 6s linear infinite;
+            pointer-events: none;
+            z-index: 999;
+        }
+        @keyframes scan { 0% { top: -2% } 100% { top: 102% } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* NAV */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            padding: 1rem 2.5rem;
+            background: rgba(1, 8, 16, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 245, 255, 0.15);
+        }
+        nav::before {
+            content: 'CIEL//';
+            font-family: 'Orbitron', monospace;
+            font-size: 0.75rem;
+            font-weight: 900;
+            color: var(--cyan);
+            letter-spacing: 4px;
+            margin-right: auto;
+            text-shadow: var(--glow);
+        }
+        nav a {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            color: #7ab8d4;
+            text-decoration: none;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 0.3rem 0.8rem;
+            border: 1px solid transparent;
+            transition: all 0.3s;
+        }
+        nav a:hover, nav a.active {
+            color: var(--cyan);
+            border-color: rgba(0, 245, 255, 0.4);
+            background: rgba(0, 245, 255, 0.05);
+            text-shadow: var(--glow);
+        }
+
+        /* HERO */
+        .hero {
+            position: relative;
+            min-height: 45vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 6rem 5vw 2rem;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(1,8,20,0.7) 40%, transparent 100%);
+            z-index: -1;
+        }
+        .hero-badge {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--cyan);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-bottom: 1.2rem;
+            opacity: 0;
+            animation: fadeUp 0.6s 0.2s forwards;
+        }
+        .hero-badge span {
+            display: inline-block;
+            width: 30px; height: 1px;
+            background: var(--cyan);
+            vertical-align: middle;
+            margin-right: 10px;
+            box-shadow: var(--glow);
+        }
+        .hero-badge .cursor {
+            display: inline-block;
+            width: 8px; height: 13px;
+            background: var(--cyan);
+            vertical-align: middle;
+            margin-left: 4px;
+            animation: blink 1s step-end infinite;
+        }
+        .hero h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(2.2rem, 6vw, 5rem);
+            font-weight: 900;
+            line-height: 1.05;
+            color: #fff;
+            text-shadow: 0 0 60px rgba(0,245,255,0.3);
+            max-width: 800px;
+            opacity: 0;
+            animation: fadeUp 0.7s 0.4s forwards;
+        }
+        .hero h1 .accent { color: var(--cyan); text-shadow: var(--glow-strong); }
+        .hero-sub {
+            font-size: 1.15rem;
+            font-weight: 300;
+            color: #6a9ab8;
+            margin-top: 1.2rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeUp 0.7s 0.6s forwards;
+        }
+        .hero-line {
+            width: 120px; height: 2px;
+            background: linear-gradient(90deg, var(--cyan), transparent);
+            margin: 2rem 0;
+            box-shadow: var(--glow);
+            opacity: 0;
+            animation: fadeUp 0.5s 0.8s forwards;
+        }
+
+        /* CAT SELECTOR */
+        .sub-selector {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            padding: 1.5rem 5vw 3rem;
+            flex-wrap: wrap;
+        }
+        .sub-card {
+            flex: 1;
+            min-width: 200px;
+            max-width: 260px;
+            padding: 1.8rem 1.5rem;
+            background: rgba(0, 15, 40, 0.7);
+            border: 1px solid rgba(0,245,255,0.08);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.35s;
+            position: relative;
+            overflow: hidden;
+        }
+        .sub-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--blue), var(--cyan));
+            box-shadow: var(--glow);
+            transform: scaleX(0);
+            transition: transform 0.35s;
+        }
+        .sub-card:hover, .sub-card.active {
+            border-color: rgba(0,245,255,0.35);
+            background: rgba(0,35,80,0.75);
+            transform: translateY(-5px);
+            box-shadow: 0 16px 50px rgba(0,0,0,0.4), 0 0 25px rgba(0,245,255,0.12);
+        }
+        .sub-card:hover::after, .sub-card.active::after { transform: scaleX(1); }
+        .sub-card.active { border-color: var(--cyan); }
+        .sub-card-icon { font-size: 1.8rem; margin-bottom: 0.6rem; }
+        .sub-card-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+        .sub-card.active .sub-card-title { color: var(--cyan); text-shadow: var(--glow); }
+        .sub-card-count {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.6rem;
+            color: #3a6a86;
+            letter-spacing: 2px;
+            margin-top: 0.3rem;
+            text-transform: uppercase;
+        }
+        .sub-card.active .sub-card-count { color: #5aadcc; }
+
+        /* SECTIONS */
+        section {
+            position: relative;
+            z-index: 1;
+            padding: 5rem 5vw;
+        }
+        .section-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 5px;
+            color: var(--cyan);
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-label::before {
+            content: '';
+            display: inline-block;
+            width: 20px; height: 1px;
+            background: var(--cyan);
+            box-shadow: var(--glow);
+        }
+        h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1.4rem, 3vw, 2.2rem);
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 3rem;
+        }
+
+        /* CARDS */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0,245,255,0.1);
+            border-radius: 8px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 3px; height: 100%;
+            background: linear-gradient(180deg, var(--cyan), var(--blue));
+            box-shadow: var(--glow);
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.4s;
+        }
+        .card:hover {
+            border-color: rgba(0,245,255,0.3);
+            background: rgba(0,30,70,0.7);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 30px rgba(0,245,255,0.1);
+        }
+        .card:hover::before { transform: scaleY(1); }
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        .card-icon { font-size: 2rem; }
+        .card-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+        .card-desc {
+            font-size: 0.85rem;
+            color: #5a8aaa;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(0,245,255,0.06);
+            line-height: 1.5;
+        }
+        .card-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+        .card-list li {
+            font-size: 0.88rem;
+            color: #4a7a96;
+            padding-left: 1.2rem;
+            position: relative;
+            line-height: 1.5;
+        }
+        .card-list li::before {
+            content: '›';
+            position: absolute;
+            left: 0;
+            color: var(--cyan);
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+        .card-tag {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.2rem 0.7rem;
+            background: rgba(0,245,255,0.08);
+            border: 1px solid rgba(0,245,255,0.2);
+            border-radius: 2px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--cyan);
+            letter-spacing: 2px;
+        }
+
+        /* CONTENT PANELS */
+        .content-panel { display: none; }
+        .content-panel.visible { display: block; }
+
+        /* COMING SOON */
+        .coming-soon {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 6rem 5vw;
+            display: none;
+        }
+        .coming-soon.visible { display: block; }
+        .coming-soon-icon { font-size: 4rem; margin-bottom: 1.5rem; }
+        .coming-soon h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1.4rem, 3vw, 2.2rem);
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+        .coming-soon p {
+            color: #4a7a96;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+        }
+
+        /* FOOTER */
+        footer {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            z-index: 100;
+            text-align: center;
+            padding: 1.2rem 2rem;
+            border-top: 1px solid rgba(0,245,255,0.2);
+            background: rgba(0,5,15,0.95);
+            backdrop-filter: blur(10px);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.78rem;
+            color: #7ab8d4;
+            letter-spacing: 2px;
+        }
+        body { padding-bottom: 80px; }
+        footer .footer-brand {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--cyan);
+            text-shadow: var(--glow);
+            letter-spacing: 4px;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        footer .footer-sep { color: rgba(0,245,255,0.3); margin: 0 0.8rem; }
+        .corner { position: absolute; width: 20px; height: 20px; opacity: 0.5; }
+        .corner-tl { top: 1.5rem; left: 1.5rem; border-top: 1px solid var(--cyan); border-left: 1px solid var(--cyan); }
+
+        @media (max-width: 700px) {
+            .cards-grid { grid-template-columns: 1fr; }
+            .sub-selector { flex-direction: column; align-items: center; }
+            .sub-card { max-width: 100%; width: 100%; }
+        }
+    </style>
 </head>
+<body>
 
-<body class="projets">
-
-<nav class="nav">
+<!-- NAV -->
+<nav>
     <a href="index.html">Accueil</a>
     <a href="matieres.html">Matières</a>
-    <a href="projets.html">Projets</a>
+    <a href="projets.html" class="active">Projets</a>
 </nav>
 
-<header class="page-header">
-    <h1></h1>
-</header>
+<!-- HERO -->
+<div class="hero">
+    <div class="hero-bg"></div>
+    <div class="corner corner-tl"></div>
+    <div class="hero-badge"><span></span>Bac Pro CIEL<div class="cursor"></div></div>
+    <h1>Les <span class="accent">Projets</span></h1>
+    <div class="hero-sub" id="hero-sub-text">Bac Pro CIEL</div>
+    <div class="hero-line"></div>
+</div>
 
-<main class="content">
-    <ul>
-        <li>Création de sites web</li>
-        <li>Mise en place de réseaux</li>
-        <li>Sécurisation de systèmes</li>
-        <li>Projets électroniques</li>
-    </ul>
-</main>
+<!-- CATÉGORIES DE PROJETS -->
+<div class="sub-selector" id="sub-terminale">
+    <div class="sub-card" id="sub-btn-web" onclick="selectSub('web')">
+        <div class="sub-card-icon">🌐</div>
+        <div class="sub-card-title">Site Web</div>
+        <div class="sub-card-count">4 projets</div>
+    </div>
+    <div class="sub-card" id="sub-btn-secu" onclick="selectSub('secu')">
+        <div class="sub-card-icon">🛡️</div>
+        <div class="sub-card-title">Sécurisation</div>
+        <div class="sub-card-count">4 projets</div>
+    </div>
+    <div class="sub-card" id="sub-btn-elec" onclick="selectSub('elec')">
+        <div class="sub-card-icon">⚡</div>
+        <div class="sub-card-title">Électronique</div>
+        <div class="sub-card-count">4 projets</div>
+    </div>
+    <div class="sub-card" id="sub-btn-reseau" onclick="selectSub('reseau')">
+        <div class="sub-card-icon">🔗</div>
+        <div class="sub-card-title">Réseaux</div>
+        <div class="sub-card-count">4 projets</div>
+    </div>
+    <div class="sub-card" id="sub-btn-autre" onclick="selectSub('autre')">
+        <div class="sub-card-icon">🎯</div>
+        <div class="sub-card-title">Autres Projets</div>
+        <div class="sub-card-count">4 projets</div>
+    </div>
+</div>
 
-<body class="projets">
+<!-- ═══ PANEL : SITE WEB ═══ -->
+<div class="content-panel" id="panel-terminale-web">
+    <section>
+        <div class="section-label">Terminale · Projets Site Web</div>
+        <h2>Créer un Site Web</h2>
+        <div class="cards-grid">
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">🏫</span></div>
+                <div class="card-title">Site Vitrine de Classe</div>
+                <div class="card-desc">Concevoir un site web pour présenter la classe TCIEL, les projets réalisés et les stages en entreprise.</div>
+                <ul class="card-list">
+                    <li>Création des pages en HTML / CSS / JavaScript</li>
+                    <li>Design responsive adapté mobile et desktop</li>
+                    <li>Intégration d'un formulaire de contact</li>
+                    <li>Mise en ligne sur un hébergeur ou serveur local</li>
+                </ul>
+                <div class="card-tag">HTML · CSS · JS · HÉBERGEMENT</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">🛒</span></div>
+                <div class="card-title">Site E-commerce Fictif</div>
+                <div class="card-desc">Développer un site de vente en ligne fictif avec catalogue produits, panier et formulaire de commande.</div>
+                <ul class="card-list">
+                    <li>Structure HTML sémantique et CSS avancé</li>
+                    <li>Gestion du panier en JavaScript</li>
+                    <li>Formulaire de commande avec validation</li>
+                    <li>Base de données produits en JSON ou MySQL</li>
+                </ul>
+                <div class="card-tag">HTML · CSS · JS · PHP · BDD</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">📊</span></div>
+                <div class="card-title">Dashboard de Supervision</div>
+                <div class="card-desc">Créer une interface web affichant en temps réel des données systèmes (CPU, RAM, réseau) d'un serveur.</div>
+                <ul class="card-list">
+                    <li>Interface graphique avec graphiques dynamiques</li>
+                    <li>Récupération des données via scripts Python/Bash</li>
+                    <li>Actualisation automatique via API ou WebSocket</li>
+                    <li>Alertes visuelles en cas de seuil dépassé</li>
+                </ul>
+                <div class="card-tag">HTML · JS · PYTHON · API</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">📝</span></div>
+                <div class="card-title">Blog Technique CIEL</div>
+                <div class="card-desc">Réaliser un blog où les élèves publient leurs tutoriels, projets et retours d'expérience de stage.</div>
+                <ul class="card-list">
+                    <li>Système de publication et gestion des articles</li>
+                    <li>Interface d'administration sécurisée</li>
+                    <li>Moteur de recherche intégré</li>
+                    <li>Hébergement sur serveur Apache/Nginx</li>
+                </ul>
+                <div class="card-tag">PHP · MySQL · CSS · APACHE</div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<!-- ═══ PANEL : SÉCURISATION ═══ -->
+<div class="content-panel" id="panel-terminale-secu">
+    <section>
+        <div class="section-label">Terminale · Projets Sécurisation</div>
+        <h2>Sécurisation de Systèmes</h2>
+        <div class="cards-grid">
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">🔍</span></div>
+                <div class="card-title">Audit de Sécurité Réseau</div>
+                <div class="card-desc">Analyser les vulnérabilités d'un réseau simulé en lab et proposer un plan de sécurisation complet.</div>
+                <ul class="card-list">
+                    <li>Scan de ports et inventaire des services actifs</li>
+                    <li>Détection de failles avec Nmap et Wireshark</li>
+                    <li>Rédaction d'un rapport d'audit professionnel</li>
+                    <li>Mise en place des correctifs et recommandations</li>
+                </ul>
+                <div class="card-tag">NMAP · WIRESHARK · AUDIT · RAPPORT</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">🔥</span></div>
+                <div class="card-title">Mise en Place d'un Pare-feu</div>
+                <div class="card-desc">Configurer et tester un pare-feu sur un réseau d'entreprise simulé pour filtrer les accès non autorisés.</div>
+                <ul class="card-list">
+                    <li>Configuration des règles iptables ou pfSense</li>
+                    <li>Définition des politiques d'accès par zone</li>
+                    <li>Tests d'intrusion pour valider la configuration</li>
+                    <li>Supervision des logs et des tentatives bloquées</li>
+                </ul>
+                <div class="card-tag">IPTABLES · PFSENSE · FIREWALL · LOG</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">🔐</span></div>
+                <div class="card-title">Sécurisation d'un Serveur Web</div>
+                <div class="card-desc">Durcir un serveur Apache/Nginx contre les attaques web courantes (injection SQL, XSS, force brute).</div>
+                <ul class="card-list">
+                    <li>Mise en place du HTTPS avec certificat SSL/TLS</li>
+                    <li>Protection contre les injections SQL et XSS</li>
+                    <li>Configuration d'un WAF (Web Application Firewall)</li>
+                    <li>Blocage automatique des tentatives brute-force</li>
+                </ul>
+                <div class="card-tag">HTTPS · SSL · WAF · APACHE</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">🧱</span></div>
+                <div class="card-title">Politique de Sauvegarde</div>
+                <div class="card-desc">Mettre en place une stratégie de sauvegarde automatique et de restauration pour les données critiques.</div>
+                <ul class="card-list">
+                    <li>Planification des sauvegardes (incrémentale, complète)</li>
+                    <li>Scripts automatisés Bash ou Python</li>
+                    <li>Stockage sécurisé local et distant (NAS, cloud)</li>
+                    <li>Test de restauration et plan de reprise d'activité</li>
+                </ul>
+                <div class="card-tag">BASH · BACKUP · NAS · RESTAURATION</div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<!-- ═══ PANEL : ÉLECTRONIQUE ═══ -->
+<div class="content-panel" id="panel-terminale-elec">
+    <section>
+        <div class="section-label">Terminale · Projets Électronique</div>
+        <h2>Projets Électronique</h2>
+        <div class="cards-grid">
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">🌡️</span></div>
+                <div class="card-title">Station Météo Connectée</div>
+                <div class="card-desc">Concevoir une station météo autonome qui mesure température, humidité et pression, et envoie les données en WiFi.</div>
+                <ul class="card-list">
+                    <li>Câblage des capteurs DHT22 et BMP280</li>
+                    <li>Programmation d'un microcontrôleur Arduino/ESP32</li>
+                    <li>Transmission des données vers un serveur web</li>
+                    <li>Affichage sur écran LCD ou dashboard en ligne</li>
+                </ul>
+                <div class="card-tag">ARDUINO · ESP32 · CAPTEURS · IOT</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">🚨</span></div>
+                <div class="card-title">Système d'Alarme Domotique</div>
+                <div class="card-desc">Réaliser un système d'alarme avec détecteur de mouvement, sirène et notification par SMS ou email.</div>
+                <ul class="card-list">
+                    <li>Capteur PIR pour la détection de présence</li>
+                    <li>Déclenchement d'une sirène et LED d'alerte</li>
+                    <li>Envoi d'une notification via module GSM ou WiFi</li>
+                    <li>Code de désactivation sur clavier numérique</li>
+                </ul>
+                <div class="card-tag">ARDUINO · PIR · GSM · DOMOTIQUE</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">🤖</span></div>
+                <div class="card-title">Robot Suiveur de Ligne</div>
+                <div class="card-desc">Construire et programmer un petit robot capable de suivre un tracé au sol grâce à des capteurs infrarouges.</div>
+                <ul class="card-list">
+                    <li>Montage mécanique du châssis et des moteurs DC</li>
+                    <li>Capteurs IR pour détecter la ligne noire</li>
+                    <li>Algorithme de correction de trajectoire en C++</li>
+                    <li>Tests et ajustements des vitesses moteurs</li>
+                </ul>
+                <div class="card-tag">ARDUINO · MOTEURS · IR · C++</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">💡</span></div>
+                <div class="card-title">Éclairage Intelligent</div>
+                <div class="card-desc">Développer un système d'éclairage automatique qui s'adapte à la luminosité ambiante et à la présence humaine.</div>
+                <ul class="card-list">
+                    <li>Capteur de luminosité LDR et capteur PIR</li>
+                    <li>Gradation des LEDs via PWM</li>
+                    <li>Contrôle à distance par smartphone via Bluetooth</li>
+                    <li>Programmation de scénarios d'éclairage</li>
+                </ul>
+                <div class="card-tag">ARDUINO · LED · PWM · BLUETOOTH</div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<!-- ═══ PANEL : RÉSEAUX ═══ -->
+<div class="content-panel" id="panel-terminale-reseau">
+    <section>
+        <div class="section-label">Terminale · Projets Réseaux</div>
+        <h2>Mise en Place de Réseaux</h2>
+        <div class="cards-grid">
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">🏢</span></div>
+                <div class="card-title">Réseau d'Entreprise Simulé</div>
+                <div class="card-desc">Concevoir et déployer une infrastructure réseau complète pour une petite entreprise fictive sous Packet Tracer.</div>
+                <ul class="card-list">
+                    <li>Plan d'adressage IP avec sous-réseaux VLAN</li>
+                    <li>Configuration routeurs, switchs et points d'accès WiFi</li>
+                    <li>Services DNS, DHCP et serveur de fichiers</li>
+                    <li>Accès sécurisé depuis l'extérieur via VPN</li>
+                </ul>
+                <div class="card-tag">CISCO · VLAN · DHCP · DNS · VPN</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">🖥️</span></div>
+                <div class="card-title">Serveur Windows Server</div>
+                <div class="card-desc">Installer et configurer un serveur Windows Server avec Active Directory, partage de fichiers et gestion des utilisateurs.</div>
+                <ul class="card-list">
+                    <li>Installation et configuration d'Active Directory</li>
+                    <li>Création des comptes, groupes et politiques GPO</li>
+                    <li>Mise en place du partage de fichiers NTFS</li>
+                    <li>Sauvegarde et supervision du serveur</li>
+                </ul>
+                <div class="card-tag">WINDOWS SERVER · AD · GPO · NTFS</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">🐧</span></div>
+                <div class="card-title">Serveur Linux Multiservice</div>
+                <div class="card-desc">Déployer un serveur Linux hébergeant plusieurs services : web, FTP, messagerie et surveillance réseau.</div>
+                <ul class="card-list">
+                    <li>Installation d'Apache, vsftpd et Postfix</li>
+                    <li>Sécurisation SSH avec clés et fail2ban</li>
+                    <li>Supervision via Nagios ou Zabbix</li>
+                    <li>Scripts d'automatisation Bash des tâches admin</li>
+                </ul>
+                <div class="card-tag">LINUX · APACHE · SSH · NAGIOS</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">☁️</span></div>
+                <div class="card-title">Infrastructure Virtualisée</div>
+                <div class="card-desc">Créer un environnement virtualisé avec plusieurs machines interconnectées simulant un parc informatique réel.</div>
+                <ul class="card-list">
+                    <li>Installation de VMware ou VirtualBox</li>
+                    <li>Création de VMs Windows et Linux en réseau interne</li>
+                    <li>Snapshots, clonage et gestion des ressources</li>
+                    <li>Documentation complète du schéma d'infrastructure</li>
+                </ul>
+                <div class="card-tag">VMWARE · VIRTUALBOX · VM · RÉSEAU</div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<!-- ═══ PANEL : AUTRES PROJETS ═══ -->
+<div class="content-panel" id="panel-terminale-autre">
+    <section>
+        <div class="section-label">Terminale · Autres Projets</div>
+        <h2>Autres Projets</h2>
+        <div class="cards-grid">
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">📱</span></div>
+                <div class="card-title">Application de Gestion</div>
+                <div class="card-desc">Développer une application de bureau ou mobile pour gérer un inventaire, un planning ou un carnet d'adresses.</div>
+                <ul class="card-list">
+                    <li>Interface graphique en Python (Tkinter) ou Java</li>
+                    <li>Base de données SQLite pour le stockage</li>
+                    <li>Fonctions CRUD : ajout, modification, suppression</li>
+                    <li>Export des données en CSV ou PDF</li>
+                </ul>
+                <div class="card-tag">PYTHON · SQLITE · TKINTER · CSV</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">🖨️</span></div>
+                <div class="card-title">Maintenance Informatique</div>
+                <div class="card-desc">Diagnostiquer et réparer un parc de postes informatiques en panne, documenter les interventions réalisées.</div>
+                <ul class="card-list">
+                    <li>Diagnostic matériel et logiciel des pannes</li>
+                    <li>Réinstallation et configuration de systèmes d'exploitation</li>
+                    <li>Déploiement de postes en masse avec scripts</li>
+                    <li>Rédaction des fiches d'intervention GLPI</li>
+                </ul>
+                <div class="card-tag">MAINTENANCE · OS · GLPI · DÉPLOIEMENT</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">🎓</span></div>
+                <div class="card-title">Support de Formation</div>
+                <div class="card-desc">Créer un tutoriel interactif ou une vidéo pédagogique pour expliquer un concept technique à des élèves de Seconde.</div>
+                <ul class="card-list">
+                    <li>Rédaction d'un tutoriel illustré en HTML ou PDF</li>
+                    <li>Création de schémas et captures d'écran annotées</li>
+                    <li>Exercices pratiques avec corrigés</li>
+                    <li>Présentation orale devant la classe</li>
+                </ul>
+                <div class="card-tag">PÉDAGOGIE · HTML · COMMUNICATION</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">🗃️</span></div>
+                <div class="card-title">Base de Données Relationnelle</div>
+                <div class="card-desc">Modéliser et implémenter une base de données pour une situation réelle (école, bibliothèque, stock de matériel).</div>
+                <ul class="card-list">
+                    <li>Modélisation MCD/MLD du schéma relationnel</li>
+                    <li>Création des tables et relations sous MySQL</li>
+                    <li>Requêtes SQL avancées (JOIN, GROUP BY, sous-requêtes)</li>
+                    <li>Interface web de consultation via PHP</li>
+                </ul>
+                <div class="card-tag">SQL · MYSQL · PHP · MODÉLISATION</div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<footer>
+    <span class="footer-brand">// BAC PRO CIEL — PROJETS</span>
+    © 2026 — Lycée Édouard Branly
+    <span class="footer-sep">·</span>
+    By TCIEL
+    <span class="footer-sep">·</span>
+    Édouard Branly
+</footer>
+
+<script>
+    function selectSub(type) {
+        document.querySelectorAll('.sub-card').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.content-panel').forEach(p => p.classList.remove('visible'));
+
+        document.getElementById('sub-btn-' + type).classList.add('active');
+        document.getElementById('panel-terminale-' + type).classList.add('visible');
+
+        setTimeout(() => {
+            document.getElementById('panel-terminale-' + type).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    }
+</script>
+
+</body>
 </html>
-
