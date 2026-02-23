@@ -5,56 +5,63 @@
     <title>Présentation – CIEL</title>
     <link rel="stylesheet" href="style.css">
 
-    <style>
-    body{
-        margin:0;
-        font-family:Arial, sans-serif;
-        background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-        color:rgba(219, 218, 226, 0.253);
-        text-align:center;
-    }
 
-    .nav a {
-        color: white;
-        margin: 10px;
-        text-decoration: none;
-        font-size: 16px;
-    }
-
-    .nav {
-        padding: 15px;
-    }
-
-    .section{
-        min-height:80vh;
-        display:flex;
-        flex-direction:column;
-        justify-content:flex-end;
-        align-items:center;
-        padding-bottom:80px;
-    }
-
-    .qr-image{
-        margin-top:100px;
-        width:200px;
-        height:200px;
-    }
-
-    .scan-text{
-        margin-top:20px;
-        font-size:18px;
-        color:white;
-    }
-    </style>
-</head>
-
-<body>
+<body class="presentation-page">
 
 <nav class="nav">
     <a href="index.html">Accueil</a>
     <a href="matieres.html">Matières</a>
     <a href="projets.html">Projets</a>
 </nav>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    color:rgba(219, 218, 226, 0.253);
+    text-align:center;
+}
+
+.section{
+    min-height:80vh;      /* prend toute la hauteur de l'écran */
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;  /* pousse le contenu vers le bas */
+    align-items:center;
+    padding-bottom:80px;
+}
+
+h1{
+    font-size:40px;
+    margin-bottom:20px;
+}
+
+#qrcode{
+    margin-top:100px;   /* augmente la valeur pour descendre encore plus */
+    display:flex;
+    justify-content:center;
+}
+
+.btn{
+    background:#00c6ff;
+    border:none;
+    padding:15px 30px;
+    font-size:18px;
+    border-radius:30px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.btn:hover{
+    background:#0072ff;
+}
+</style>
+</head>
+
+<body>
+
+</script>
 
 <section class="section">
     <img src="qrcode-decouvre.png" alt="QR Code Bac Pro CIEL" class="qr-image">
