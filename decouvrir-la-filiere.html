@@ -6,3 +6,76 @@
 </head>
 <body></body>
 </html>
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Présentation – CIEL</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+    body{
+        margin:0;
+        font-family:Arial, sans-serif;
+        background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+        color:rgba(219, 218, 226, 0.253);
+        text-align:center;
+    }
+
+    .nav a {
+        color: white;
+        margin: 10px;
+        text-decoration: none;
+        font-size: 16px;
+    }
+
+    .nav {
+        padding: 15px;
+    }
+
+    .section{
+        min-height:80vh;
+        display:flex;
+        flex-direction:column;
+        justify-content:flex-end;
+        align-items:center;
+        padding-bottom:80px;
+    }
+
+    .qr-image{
+        margin-top:100px;
+        width:200px;
+        height:200px;
+    }
+
+    .scan-text{
+        margin-top:20px;
+        font-size:18px;
+        color:white;
+    }
+    </style>
+</head>
+
+<body>
+
+<nav class="nav">
+    <a href="index.html">Accueil</a>
+    <a href="matieres.html">Matières</a>
+    <a href="projets.html">Projets</a>
+</nav>
+
+<section class="section">
+    <img src="qrcode-decouvre.png" alt="QR Code Bac Pro CIEL" class="qr-image">
+    <div class="scan-text">
+        Scannez le QR Code pour découvrir la filière
+    </div>
+</section>
+
+</body>
