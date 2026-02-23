@@ -3,274 +3,689 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bac Pro CIEL - Mobile</title>
-
+    <title>Bac Pro CIEL - Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --cyan: #00f5ff;
+            --blue: #0066ff;
+            --dark: #020b18;
+            --darker: #010810;
+            --card: rgba(0, 20, 50, 0.85);
+            --border: rgba(0, 245, 255, 0.2);
+            --glow: rgba(0, 245, 255, 0.4);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            margin: 0;
             min-height: 100vh;
-            background: url("fond-mobile.png") no-repeat center center;
+            background: url("fond-mobile.png") no-repeat center bottom fixed;
             background-size: cover;
-            font-family: Arial, sans-serif;
+            font-family: 'Rajdhani', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             text-align: center;
             color: white;
+            overflow-x: hidden;
         }
 
-        .btn-quiz {
-            display: inline-block;
-            padding: 15px 30px;
-            background: #7c3aed;
-            color: white;
+        /* Overlay sombre sur le fond */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 11, 24, 0.55);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Grille fond */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ==================== LANDING ==================== */
+        .landing {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 28px;
+            padding: 30px 20px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .landing-logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.35em;
+            color: var(--cyan);
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        .landing-title {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1.6rem, 7vw, 2.2rem);
+            font-weight: 900;
+            line-height: 1.1;
+            text-shadow: 0 0 20px var(--cyan), 0 0 40px rgba(0,245,255,0.3);
+            letter-spacing: 0.05em;
+        }
+
+        .landing-title span {
+            color: var(--cyan);
+            display: block;
+        }
+
+        .landing-sub {
+            font-size: 1rem;
+            color: rgba(200, 230, 255, 0.7);
+            letter-spacing: 0.08em;
+            font-weight: 500;
+        }
+
+        /* Hexagone décoratif */
+        .hex-deco {
+            width: 120px;
+            height: 120px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hex-deco::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 245, 255, 0.06);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            border: 1px solid rgba(0,245,255,0.3);
+            animation: hexPulse 3s ease-in-out infinite;
+        }
+
+        .hex-deco::after {
+            content: '';
+            position: absolute;
+            inset: 15px;
+            background: rgba(0, 102, 255, 0.1);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            animation: hexPulse 3s ease-in-out infinite 0.5s;
+        }
+
+        .hex-icon {
+            font-size: 2.2rem;
+            position: relative;
+            z-index: 1;
+            animation: hexPulse 2s ease-in-out infinite;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 24px;
+        }
+
+        .stat-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 10px 18px;
+            background: rgba(0,245,255,0.05);
+            border: 1px solid var(--border);
+            clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+        }
+
+        .stat-num {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--cyan);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: rgba(200,230,255,0.6);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* BOUTON COMMENCER */
+        .btn-start {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 36px;
+            background: transparent;
             border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
             cursor: pointer;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--dark);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: transform 0.2s;
+            overflow: visible;
         }
 
+        .btn-start::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--cyan), #00aaff);
+            clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+            z-index: -1;
+            transition: filter 0.2s;
+        }
+
+        .btn-start::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            background: linear-gradient(135deg, var(--cyan), #0066ff);
+            clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+            z-index: -2;
+            opacity: 0.4;
+            filter: blur(6px);
+        }
+
+        .btn-start:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-start:hover::before {
+            filter: brightness(1.15);
+        }
+
+        .btn-arrow {
+            font-size: 1.1rem;
+            animation: arrowBounce 1.5s ease-in-out infinite;
+        }
+
+        /* ==================== QUIZ CONTAINER ==================== */
         #quiz-container {
             display: none;
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            inset: 0;
+            background: var(--darker);
             overflow-y: auto;
-            padding: 20px;
-            box-sizing: border-box;
-            text-align: center;
-            color: white;
+            padding: 20px 16px 30px;
+            z-index: 10;
+            animation: slideIn 0.4s ease;
         }
 
-        #quiz-container h2 {
-            font-size: 22px;
-            margin-bottom: 5px;
+        #quiz-container::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0,245,255,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,245,255,0.025) 1px, transparent 1px);
+            background-size: 30px 30px;
+            pointer-events: none;
         }
 
-        #progress {
-            font-size: 14px;
-            color: #00c3ff;
-            margin-bottom: 20px;
+        .quiz-header {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
         }
 
-        #question-text {
-            font-size: 18px;
-            margin-bottom: 25px;
-            line-height: 1.5;
-        }
-
-        .answer-btn {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            margin-bottom: 12px;
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            box-sizing: border-box;
-            transition: 0.2s;
-        }
-
-        .answer-btn.correct {
-            background: rgba(0, 200, 100, 0.4);
-            border-color: #00c864;
-        }
-
-        .answer-btn.wrong {
-            background: rgba(220, 50, 50, 0.4);
-            border-color: #dc3232;
-        }
-
-        #feedback {
-            font-size: 15px;
-            margin: 10px 0 20px;
-            min-height: 20px;
-            color: #ffd700;
-        }
-
-        #next-btn {
-            display: none;
-            padding: 12px 30px;
-            background: #00c3ff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        #result-container {
-            display: none;
-        }
-
-        #result-container h2 {
-            font-size: 26px;
-            margin-bottom: 10px;
-        }
-
-        #score-text {
-            font-size: 20px;
-            margin-bottom: 20px;
-            color: #00c3ff;
-        }
-
-        #result-msg {
-            font-size: 16px;
-            margin-bottom: 30px;
-            line-height: 1.5;
-        }
-
-        #restart-btn {
-            padding: 12px 30px;
-            background: #7c3aed;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            font-weight: bold;
+        .quiz-logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.75rem;
+            color: var(--cyan);
+            letter-spacing: 0.2em;
         }
 
         #close-quiz {
-            position: fixed;
-            top: 15px; right: 15px;
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            font-size: 20px;
-            width: 35px; height: 35px;
-            border-radius: 50%;
+            background: rgba(0,245,255,0.1);
+            border: 1px solid var(--border);
+            color: var(--cyan);
+            width: 32px; height: 32px;
+            border-radius: 4px;
             cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        #close-quiz:hover { background: rgba(0,245,255,0.2); }
+
+        /* BARRE DE PROGRESSION */
+        .progress-bar-wrap {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 4px;
+            background: rgba(0,245,255,0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cyan), #0066ff);
+            border-radius: 2px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 8px var(--glow);
+        }
+
+        #progress {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.65rem;
+            color: rgba(0,245,255,0.6);
+            letter-spacing: 0.15em;
+            margin-top: 6px;
+            text-align: right;
+        }
+
+        /* CARTE QUESTION */
+        .question-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            padding: 22px 18px;
+            margin-bottom: 18px;
+            position: relative;
+            clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+        }
+
+        .question-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+        }
+
+        .question-type-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            background: rgba(0,245,255,0.1);
+            border: 1px solid rgba(0,245,255,0.3);
+            font-family: 'Orbitron', monospace;
+            font-size: 0.55rem;
+            color: var(--cyan);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        #question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            line-height: 1.5;
+            color: #e8f4ff;
+            letter-spacing: 0.02em;
+        }
+
+        /* RÉPONSES */
+        .answer-btn {
+            display: block;
+            width: 100%;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            background: rgba(0, 30, 70, 0.6);
+            color: rgba(200, 230, 255, 0.9);
+            border: 1px solid rgba(0,100,200,0.3);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            position: relative;
+            clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+            letter-spacing: 0.03em;
+        }
+
+        .answer-btn::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            background: rgba(0,100,200,0.5);
+            transition: background 0.2s;
+        }
+
+        .answer-btn:hover:not(:disabled) {
+            background: rgba(0, 60, 140, 0.8);
+            border-color: rgba(0,200,255,0.5);
+            color: white;
+            transform: translateX(4px);
+        }
+
+        .answer-btn:hover:not(:disabled)::before {
+            background: var(--cyan);
+        }
+
+        .answer-btn.correct {
+            background: rgba(0, 180, 80, 0.2);
+            border-color: #00c864;
+            color: #00ff88;
+        }
+
+        .answer-btn.correct::before { background: #00c864; }
+
+        .answer-btn.wrong {
+            background: rgba(220, 40, 40, 0.2);
+            border-color: #ff4444;
+            color: #ff6666;
+        }
+
+        .answer-btn.wrong::before { background: #ff4444; }
+
+        /* FEEDBACK */
+        #feedback {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin: 12px 0 16px;
+            min-height: 22px;
+            letter-spacing: 0.05em;
+            padding: 8px 12px;
+            border-left: 3px solid transparent;
+        }
+
+        #feedback.good {
+            color: #00ff88;
+            background: rgba(0,180,80,0.08);
+            border-left-color: #00c864;
+        }
+
+        #feedback.bad {
+            color: #ff8888;
+            background: rgba(220,40,40,0.08);
+            border-left-color: #ff4444;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        /* BOUTON SUIVANT */
+        #next-btn {
+            display: none;
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            font-family: 'Orbitron', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+        }
+
+        #next-btn:hover {
+            background: rgba(0,245,255,0.1);
+            box-shadow: 0 0 20px rgba(0,245,255,0.2);
+        }
+
+        /* ==================== RÉSULTATS ==================== */
+        #result-container {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result-header {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.7rem;
+            color: var(--cyan);
+            letter-spacing: 0.3em;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+        }
+
+        .score-circle {
+            width: 130px;
+            height: 130px;
+            margin: 0 auto 24px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .score-circle svg {
+            position: absolute;
+            inset: 0;
+            transform: rotate(-90deg);
+        }
+
+        .score-circle-bg { stroke: rgba(0,245,255,0.1); }
+        .score-circle-fill {
+            stroke: var(--cyan);
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 6px var(--cyan));
+            transition: stroke-dashoffset 1.2s ease;
+        }
+
+        .score-inner {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .score-num {
+            font-family: 'Orbitron', monospace;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--cyan);
+            text-shadow: 0 0 15px var(--cyan);
+            line-height: 1;
+        }
+
+        .score-total {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.7rem;
+            color: rgba(0,245,255,0.5);
+            letter-spacing: 0.1em;
+        }
+
+        .result-grade {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: 0.05em;
+        }
+
+        #result-msg {
+            font-size: 0.95rem;
+            color: rgba(180, 215, 255, 0.8);
+            line-height: 1.7;
+            margin-bottom: 30px;
+            padding: 16px;
+            background: rgba(0,245,255,0.04);
+            border: 1px solid var(--border);
+        }
+
+        #restart-btn {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            border: 1px solid var(--cyan);
+            color: var(--cyan);
+            font-family: 'Orbitron', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+        }
+
+        #restart-btn:hover {
+            background: rgba(0,245,255,0.1);
+            box-shadow: 0 0 20px rgba(0,245,255,0.2);
+        }
+
+        /* ==================== ANIMATIONS ==================== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes hexPulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes arrowBounce {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(5px); }
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100vh); }
+        }
+
+        /* Scanline effect subtile */
+        .scanline {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0,245,255,0.1), transparent);
+            animation: scanline 4s linear infinite;
+            pointer-events: none;
+            z-index: 100;
         }
     </style>
 </head>
 
 <body>
+    <div class="scanline"></div>
 
-    <button class="btn-quiz" onclick="startQuiz()">🎯 Commencer le quiz</button>
+    <!-- LANDING PAGE -->
+    <div class="landing" id="landing-page">
+        <div class="landing-logo">// BAC PRO CIEL — QUIZ INTERACTIF</div>
 
+        <div class="hex-deco">
+            <div class="hex-icon">🎯</div>
+        </div>
+
+        <div>
+            <div class="landing-title">
+                TESTE TON
+                <span>NIVEAU</span>
+            </div>
+        </div>
+
+        <div class="landing-sub">10 questions · Vrai/Faux & QCM</div>
+
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-num">10</div>
+                <div class="stat-label">Questions</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-num">3</div>
+                <div class="stat-label">Thèmes</div>
+            </div>
+        </div>
+
+        <button class="btn-start" onclick="startQuiz()">
+            Lancer le quiz
+            <span class="btn-arrow">▶</span>
+        </button>
+    </div>
+
+    <!-- QUIZ -->
     <div id="quiz-container">
-        <button id="close-quiz" onclick="closeQuiz()">✕</button>
+        <div class="quiz-header">
+            <div class="quiz-logo">CIEL_QUIZ</div>
+            <button id="close-quiz" onclick="closeQuiz()">✕</button>
+        </div>
+
+        <div class="progress-bar-wrap">
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+            </div>
+            <div id="progress">Q 1 / 10</div>
+        </div>
 
         <div id="question-screen">
-            <h2>Quiz Bac Pro CIEL</h2>
-            <div id="progress"></div>
-            <div id="question-text"></div>
+            <div class="question-card">
+                <div class="question-type-badge" id="q-type-badge">QCM</div>
+                <div id="question-text"></div>
+            </div>
             <div id="answers"></div>
             <div id="feedback"></div>
-            <button id="next-btn" onclick="nextQuestion()">Question suivante →</button>
+            <button id="next-btn" onclick="nextQuestion()">Question suivante ▶</button>
         </div>
 
         <div id="result-container">
-            <h2>Quiz terminé ! 🎉</h2>
-            <div id="score-text"></div>
+            <div class="result-header">// Résultat final</div>
+
+            <div class="score-circle">
+                <svg viewBox="0 0 130 130" width="130" height="130">
+                    <circle class="score-circle-bg" cx="65" cy="65" r="56" fill="none" stroke-width="6"/>
+                    <circle class="score-circle-fill" id="score-arc" cx="65" cy="65" r="56" fill="none" stroke-width="6"
+                        stroke-dasharray="351.86" stroke-dashoffset="351.86"/>
+                </svg>
+                <div class="score-inner">
+                    <div class="score-num" id="score-num">0</div>
+                    <div class="score-total" id="score-total">/10</div>
+                </div>
+            </div>
+
+            <div class="result-grade" id="result-grade"></div>
             <div id="result-msg"></div>
-            <button id="restart-btn" onclick="restartQuiz()">🔄 Recommencer</button>
+            <button id="restart-btn" onclick="restartQuiz()">↺ Recommencer</button>
         </div>
     </div>
 
     <script>
         const questions = [
-            {
-                type: "qcm",
-                question: "Que signifie l'acronyme CIEL ?",
-                answers: [
-                    "Cybersécurité, Informatique, Électronique, Logiciel",
-                    "Cybersécurité, Informatique et réseaux, Électronique",
-                    "Conception Informatique et Électronique en Lycée",
-                    "Cybersécurité Industrielle et Électronique Locale"
-                ],
-                correct: 1
-            },
-            {
-                type: "vrai-faux",
-                question: "Le Bac Pro CIEL se prépare en 3 ans après la 3ème.",
-                answers: ["Vrai", "Faux"],
-                correct: 0
-            },
-            {
-                type: "qcm",
-                question: "Lequel de ces métiers est accessible après un Bac Pro CIEL ?",
-                answers: [
-                    "Technicien réseau",
-                    "Chirurgien",
-                    "Architecte",
-                    "Comptable"
-                ],
-                correct: 0
-            },
-            {
-                type: "vrai-faux",
-                question: "Le Bac Pro CIEL permet de poursuivre ses études en BTS.",
-                answers: ["Vrai", "Faux"],
-                correct: 0
-            },
-            {
-                type: "qcm",
-                question: "Quelle est la durée des périodes de stage (PFMP) en Bac Pro CIEL ?",
-                answers: [
-                    "4 semaines au total",
-                    "22 semaines au total",
-                    "8 semaines au total",
-                    "1 an au total"
-                ],
-                correct: 1
-            },
-            {
-                type: "vrai-faux",
-                question: "La cybersécurité est une des spécialités du Bac Pro CIEL.",
-                answers: ["Vrai", "Faux"],
-                correct: 0
-            },
-            {
-                type: "qcm",
-                question: "Quel BTS est directement dans la continuité du Bac Pro CIEL ?",
-                answers: [
-                    "BTS Comptabilité",
-                    "BTS SIO (Services Informatiques aux Organisations)",
-                    "BTS Tourisme",
-                    "BTS Électrotechnique"
-                ],
-                correct: 1
-            },
-            {
-                type: "vrai-faux",
-                question: "Le Bac Pro CIEL forme uniquement à l'électronique.",
-                answers: ["Vrai", "Faux"],
-                correct: 1
-            },
-            {
-                type: "qcm",
-                question: "Qu'est-ce qu'un réseau informatique ?",
-                answers: [
-                    "Un ensemble de câbles électriques",
-                    "Un ensemble d'appareils connectés pour communiquer et partager des ressources",
-                    "Un logiciel de sécurité",
-                    "Un type de processeur"
-                ],
-                correct: 1
-            },
-            {
-                type: "vrai-faux",
-                question: "Après un Bac Pro CIEL, il est impossible d'aller à l'université.",
-                answers: ["Vrai", "Faux"],
-                correct: 1
-            }
+            { type:"QCM", question:"Que signifie l'acronyme CIEL ?", answers:["Cybersécurité, Informatique, Électronique, Logiciel","Cybersécurité, Informatique et réseaux, Électronique","Conception Informatique et Électronique en Lycée","Cybersécurité Industrielle et Électronique Locale"], correct:1 },
+            { type:"VRAI / FAUX", question:"Le Bac Pro CIEL se prépare en 3 ans après la 3ème.", answers:["Vrai","Faux"], correct:0 },
+            { type:"QCM", question:"Lequel de ces métiers est accessible après un Bac Pro CIEL ?", answers:["Technicien réseau","Chirurgien","Architecte","Comptable"], correct:0 },
+            { type:"VRAI / FAUX", question:"Le Bac Pro CIEL permet de poursuivre ses études en BTS.", answers:["Vrai","Faux"], correct:0 },
+            { type:"QCM", question:"Quelle est la durée totale des stages (PFMP) en Bac Pro CIEL ?", answers:["4 semaines","22 semaines","8 semaines","1 an"], correct:1 },
+            { type:"VRAI / FAUX", question:"La cybersécurité est une des spécialités du Bac Pro CIEL.", answers:["Vrai","Faux"], correct:0 },
+            { type:"QCM", question:"Quel BTS est dans la continuité directe du Bac Pro CIEL ?", answers:["BTS Comptabilité","BTS SIO","BTS Tourisme","BTS Électrotechnique"], correct:1 },
+            { type:"VRAI / FAUX", question:"Le Bac Pro CIEL forme uniquement à l'électronique.", answers:["Vrai","Faux"], correct:1 },
+            { type:"QCM", question:"Qu'est-ce qu'un réseau informatique ?", answers:["Un ensemble de câbles électriques","Un ensemble d'appareils connectés pour communiquer et partager des ressources","Un logiciel de sécurité","Un type de processeur"], correct:1 },
+            { type:"VRAI / FAUX", question:"Après un Bac Pro CIEL, il est impossible d'aller à l'université.", answers:["Vrai","Faux"], correct:1 }
         ];
 
-        let current = 0;
-        let score = 0;
-        let answered = false;
+        let current = 0, score = 0, answered = false;
 
         function startQuiz() {
-            current = 0;
-            score = 0;
+            current = 0; score = 0;
+            document.getElementById("landing-page").style.display = "none";
             document.getElementById("quiz-container").style.display = "block";
             document.getElementById("result-container").style.display = "none";
             document.getElementById("question-screen").style.display = "block";
@@ -279,23 +694,28 @@
 
         function closeQuiz() {
             document.getElementById("quiz-container").style.display = "none";
+            document.getElementById("landing-page").style.display = "flex";
         }
 
         function showQuestion() {
             answered = false;
             const q = questions[current];
-            document.getElementById("progress").textContent = "Question " + (current + 1) + " / " + questions.length;
+            const pct = (current / questions.length) * 100;
+            document.getElementById("progress-fill").style.width = pct + "%";
+            document.getElementById("progress").textContent = "Q " + (current+1) + " / " + questions.length;
+            document.getElementById("q-type-badge").textContent = q.type;
             document.getElementById("question-text").textContent = q.question;
             document.getElementById("feedback").textContent = "";
+            document.getElementById("feedback").className = "";
             document.getElementById("next-btn").style.display = "none";
 
             const answersDiv = document.getElementById("answers");
             answersDiv.innerHTML = "";
-            q.answers.forEach(function(ans, i) {
+            q.answers.forEach((ans, i) => {
                 const btn = document.createElement("button");
                 btn.className = "answer-btn";
                 btn.textContent = ans;
-                btn.onclick = function() { selectAnswer(i); };
+                btn.onclick = () => selectAnswer(i);
                 answersDiv.appendChild(btn);
             });
         }
@@ -303,53 +723,71 @@
         function selectAnswer(index) {
             if (answered) return;
             answered = true;
-
             const q = questions[current];
             const btns = document.querySelectorAll(".answer-btn");
-
-            btns.forEach(function(btn, i) {
-                btn.onclick = null;
+            btns.forEach((btn, i) => {
+                btn.disabled = true;
                 if (i === q.correct) btn.classList.add("correct");
                 else if (i === index) btn.classList.add("wrong");
             });
 
+            const fb = document.getElementById("feedback");
             if (index === q.correct) {
                 score++;
-                document.getElementById("feedback").textContent = "✅ Bonne réponse !";
+                fb.textContent = "✦ Bonne réponse !";
+                fb.className = "good";
             } else {
-                document.getElementById("feedback").textContent = "❌ Mauvaise réponse. La bonne réponse était : " + q.answers[q.correct];
+                fb.textContent = "✕ Incorrect — Bonne réponse : " + q.answers[q.correct];
+                fb.className = "bad";
             }
 
             if (current < questions.length - 1) {
-                document.getElementById("next-btn").style.display = "inline-block";
+                document.getElementById("next-btn").style.display = "block";
             } else {
-                setTimeout(showResult, 1200);
+                setTimeout(showResult, 1400);
             }
         }
 
-        function nextQuestion() {
-            current++;
-            showQuestion();
-        }
+        function nextQuestion() { current++; showQuestion(); }
 
         function showResult() {
             document.getElementById("question-screen").style.display = "none";
             document.getElementById("result-container").style.display = "block";
-            document.getElementById("score-text").textContent = score + " / " + questions.length;
+            document.getElementById("progress-fill").style.width = "100%";
 
-            let msg = "";
-            if (score <= 3) msg = "Tu devrais réviser un peu le Bac Pro CIEL 😅 N'hésite pas à explorer le site !";
-            else if (score <= 6) msg = "Pas mal ! Tu connais les bases du Bac Pro CIEL 👍";
-            else if (score <= 9) msg = "Très bien ! Tu maîtrises bien la filière CIEL 🎓";
-            else msg = "Parfait ! Tu es un expert du Bac Pro CIEL 🏆";
+            // Score animé
+            document.getElementById("score-num").textContent = score;
+            document.getElementById("score-total").textContent = "/ " + questions.length;
 
+            // Arc animé
+            const circumference = 351.86;
+            const offset = circumference - (score / questions.length) * circumference;
+            setTimeout(() => {
+                document.getElementById("score-arc").style.strokeDashoffset = offset;
+            }, 100);
+
+            // Grade et message
+            let grade, msg, color;
+            if (score <= 3) {
+                grade = "NIVEAU : DÉBUTANT"; color = "#ff6666";
+                msg = "Tu devrais explorer davantage le site Bac Pro CIEL 😅 Les réponses se trouvent dans les différentes sections !";
+            } else if (score <= 6) {
+                grade = "NIVEAU : INTERMÉDIAIRE"; color = "#ffaa00";
+                msg = "Pas mal ! Tu connais les bases du Bac Pro CIEL 👍 Continue à explorer la filière pour en savoir plus.";
+            } else if (score <= 9) {
+                grade = "NIVEAU : AVANCÉ"; color = "#00ccff";
+                msg = "Très bien ! Tu maîtrises bien la filière CIEL 🎓 Tu es prêt pour en apprendre encore plus.";
+            } else {
+                grade = "NIVEAU : EXPERT"; color = "#00ff88";
+                msg = "Score parfait ! Tu es un vrai expert du Bac Pro CIEL 🏆 La filière n'a plus de secrets pour toi !";
+            }
+            const gradeEl = document.getElementById("result-grade");
+            gradeEl.textContent = grade;
+            gradeEl.style.color = color;
             document.getElementById("result-msg").textContent = msg;
         }
 
-        function restartQuiz() {
-            startQuiz();
-        }
+        function restartQuiz() { startQuiz(); }
     </script>
-
 </body>
 </html>
