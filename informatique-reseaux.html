@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informatique & Réseaux – Bac Pro CIEL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cyan: #00f5ff;
+            --blue: #0066ff;
+            --dark: #020b18;
+            --darker: #010810;
+            --card-bg: rgba(0, 20, 50, 0.6);
+            --grid: rgba(0, 245, 255, 0.04);
+            --glow: 0 0 20px rgba(0, 245, 255, 0.4);
+            --glow-strong: 0 0 40px rgba(0, 245, 255, 0.7);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: #010810;
+            background-image: url('fond-info-reseaux.png');
+            background-size: cover;
+            background-position: center top;
+            background-attachment: fixed;
+            color: #c8e8ff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 17px;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ─── OVERLAY ─── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(
+                180deg,
+                rgba(1, 8, 16, 0.45) 0%,
+                rgba(0, 10, 30, 0.65) 40%,
+                rgba(0, 5, 20, 0.85) 100%
+            );
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ─── SCAN LINE ─── */
+        body::after {
+            content: '';
+            position: fixed;
+            top: -100%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+            opacity: 0.3;
+            animation: scan 6s linear infinite;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        @keyframes scan {
+            0% { top: -2% }
+            100% { top: 102% }
+        }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            padding: 1rem 2.5rem;
+            background: rgba(1, 8, 16, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 245, 255, 0.15);
+        }
+
+        nav::before {
+            content: 'CIEL//';
+            font-family: 'Orbitron', monospace;
+            font-size: 0.75rem;
+            font-weight: 900;
+            color: var(--cyan);
+            letter-spacing: 4px;
+            margin-right: auto;
+            text-shadow: var(--glow);
+        }
+
+        nav a {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            color: #7ab8d4;
+            text-decoration: none;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 0.3rem 0.8rem;
+            border: 1px solid transparent;
+            transition: all 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--cyan);
+            border-color: rgba(0, 245, 255, 0.4);
+            background: rgba(0, 245, 255, 0.05);
+            text-shadow: var(--glow);
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 6rem 5vw 4rem;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(1, 8, 20, 0.7) 40%, transparent 100%);
+            z-index: -1;
+        }
+
+        .hero-badge {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--cyan);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-bottom: 1.2rem;
+            opacity: 0;
+            animation: fadeUp 0.6s 0.2s forwards;
+        }
+
+        .hero-badge span {
+            display: inline-block;
+            width: 30px;
+            height: 1px;
+            background: var(--cyan);
+            vertical-align: middle;
+            margin-right: 10px;
+            box-shadow: var(--glow);
+        }
+
+        .hero h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(2.2rem, 6vw, 5rem);
+            font-weight: 900;
+            line-height: 1.05;
+            color: #fff;
+            text-shadow: 0 0 60px rgba(0, 245, 255, 0.3);
+            max-width: 800px;
+            opacity: 0;
+            animation: fadeUp 0.7s 0.4s forwards;
+        }
+
+        .hero h1 .accent {
+            color: var(--cyan);
+            text-shadow: var(--glow-strong);
+        }
+
+        .hero-sub {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 300;
+            color: #6a9ab8;
+            margin-top: 1.2rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeUp 0.7s 0.6s forwards;
+        }
+
+        .hero-line {
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cyan), transparent);
+            margin: 2rem 0;
+            box-shadow: var(--glow);
+            opacity: 0;
+            animation: fadeUp 0.5s 0.8s forwards;
+        }
+
+        .hero-desc {
+            max-width: 520px;
+            color: #7ab3cc;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            opacity: 0;
+            animation: fadeUp 0.7s 1s forwards;
+        }
+
+        /* ─── STATS STRIP ─── */
+        .stats {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            gap: 0;
+            padding: 0 5vw;
+            margin-bottom: 5rem;
+        }
+
+        .stat {
+            flex: 1;
+            padding: 2rem 1.5rem;
+            border: 1px solid rgba(0, 245, 255, 0.1);
+            border-right: none;
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            text-align: center;
+            opacity: 0;
+            animation: fadeUp 0.6s forwards;
+        }
+
+        .stat:first-child { border-radius: 8px 0 0 8px; }
+        .stat:last-child { border-right: 1px solid rgba(0, 245, 255, 0.1); border-radius: 0 8px 8px 0; }
+        .stat:nth-child(1) { animation-delay: 1.1s; }
+        .stat:nth-child(2) { animation-delay: 1.2s; }
+        .stat:nth-child(3) { animation-delay: 1.3s; }
+        .stat:nth-child(4) { animation-delay: 1.4s; }
+
+        .stat-num {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--cyan);
+            text-shadow: var(--glow);
+        }
+
+        .stat-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            color: #4a7a96;
+            text-transform: uppercase;
+            margin-top: 0.3rem;
+        }
+
+        /* ─── SECTION COMMON ─── */
+        section {
+            position: relative;
+            z-index: 1;
+            padding: 5rem 5vw;
+        }
+
+        .section-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 5px;
+            color: var(--cyan);
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-label::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 1px;
+            background: var(--cyan);
+            box-shadow: var(--glow);
+        }
+
+        h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1.4rem, 3vw, 2.2rem);
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 3rem;
+        }
+
+        /* ─── DOMAINES CARDS ─── */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 245, 255, 0.1);
+            border-radius: 8px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s;
+            cursor: default;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--cyan), var(--blue));
+            box-shadow: var(--glow);
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.4s;
+        }
+
+        .card:hover {
+            border-color: rgba(0, 245, 255, 0.3);
+            background: rgba(0, 30, 70, 0.7);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 245, 255, 0.1);
+        }
+
+        .card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .card-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .card p {
+            color: #5a8ca8;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .card-list {
+            list-style: none;
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+
+        .card-list li {
+            font-size: 0.88rem;
+            color: #4a7a96;
+            padding-left: 1.2rem;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .card-list li::before {
+            content: '›';
+            position: absolute;
+            left: 0;
+            color: var(--cyan);
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+
+        .card-tag {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.2rem 0.7rem;
+            background: rgba(0, 245, 255, 0.08);
+            border: 1px solid rgba(0, 245, 255, 0.2);
+            border-radius: 2px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--cyan);
+            letter-spacing: 2px;
+        }
+
+        /* ─── COMPÉTENCES ─── */
+        .competences-section {
+            background: rgba(0, 10, 25, 0.5);
+            border-top: 1px solid rgba(0, 245, 255, 0.08);
+            border-bottom: 1px solid rgba(0, 245, 255, 0.08);
+        }
+
+        .comp-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 700px) {
+            .comp-grid { grid-template-columns: 1fr; }
+            .stats { flex-direction: column; }
+            .stat { border-right: 1px solid rgba(0, 245, 255, 0.1) !important; border-bottom: none; border-radius: 0 !important; }
+            .stat:first-child { border-radius: 8px 8px 0 0 !important; }
+            .stat:last-child { border-radius: 0 0 8px 8px !important; border-bottom: 1px solid rgba(0, 245, 255, 0.1) !important; }
+        }
+
+        .comp-item {
+            padding: 1.2rem 1.5rem;
+            border: 1px solid rgba(0, 245, 255, 0.08);
+            border-radius: 6px;
+            background: rgba(0, 15, 40, 0.4);
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            transition: all 0.3s;
+        }
+
+        .comp-item:hover {
+            border-color: rgba(0, 245, 255, 0.25);
+            background: rgba(0, 25, 60, 0.5);
+        }
+
+        .comp-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--cyan);
+            box-shadow: var(--glow);
+            flex-shrink: 0;
+            margin-top: 7px;
+        }
+
+        .comp-item span {
+            font-size: 0.95rem;
+            color: #8ab8cc;
+        }
+
+        /* ─── OUTILS / TECH ─── */
+        .tech-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .tech-chip {
+            padding: 0.5rem 1.2rem;
+            border: 1px solid rgba(0, 245, 255, 0.2);
+            border-radius: 3px;
+            background: rgba(0, 245, 255, 0.04);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--cyan);
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+
+        .tech-chip:hover {
+            background: rgba(0, 245, 255, 0.12);
+            box-shadow: var(--glow);
+        }
+
+        /* ─── FOOTER ─── */
+        footer {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.637);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem;
+            color: #6bffff;
+            letter-spacing: 2px;
+        }
+
+        /* ─── ANIM ─── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ─── CORNER DECO ─── */
+        .corner {
+            position: absolute;
+            width: 20px; height: 20px;
+            opacity: 0.5;
+        }
+        .corner-tl { top: 1.5rem; left: 1.5rem; border-top: 1px solid var(--cyan); border-left: 1px solid var(--cyan); }
+        .corner-br { bottom: 1.5rem; right: 1.5rem; border-bottom: 1px solid var(--cyan); border-right: 1px solid var(--cyan); }
+    </style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<nav>
+    <a href="index.html">Accueil</a>
+    <a href="matieres.html">Matières</a>
+    <a href="projets.html">Projets</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+    <div class="hero-bg"></div>
+    <div class="corner corner-tl"></div>
+
+    <div class="hero-badge"><span></span>Module 02 — Spécialité</div>
+    <h1>Informatique<br>& <span class="accent">Réseaux</span></h1>
+    <div class="hero-sub">Bac Pro CIEL — Infrastructure numérique</div>
+    <div class="hero-line"></div>
+    <p class="hero-desc">
+        Maîtrisez l'administration des systèmes, la configuration d'infrastructures réseau
+        et le déploiement de services numériques dans des environnements professionnels réels.
+    </p>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+    <div class="stat">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Années de formation</div>
+    </div>
+    <div class="stat">
+        <div class="stat-num">16+</div>
+        <div class="stat-label">Semaines en entreprise</div>
+    </div>
+    <div class="stat">
+        <div class="stat-num">OSI</div>
+        <div class="stat-label">Modèle maîtrisé</div>
+    </div>
+    <div class="stat">
+        <div class="stat-num">IPv6</div>
+        <div class="stat-label">Protocoles avancés</div>
+    </div>
+</div>
+
+<!-- DOMAINES -->
+<section>
+    <div class="section-label">Domaines</div>
+    <h2>Axes de formation</h2>
+    <div class="cards-grid">
+        <div class="card">
+            <span class="card-icon">🖥️</span>
+            <div class="card-title">Administration Systèmes</div>
+            <p>Installation, configuration et maintenance de systèmes d'exploitation Windows Server et Linux. Gestion des utilisateurs, des droits et des politiques de sécurité.</p>
+            <ul class="card-list">
+                <li>Installation de Windows Server 2022 et Ubuntu Server</li>
+                <li>Gestion des comptes utilisateurs et groupes</li>
+                <li>Configuration des stratégies de groupe (GPO)</li>
+                <li>Supervision et maintenance des serveurs</li>
+                <li>Sauvegarde et restauration des systèmes</li>
+            </ul>
+            <div class="card-tag">WINDOWS · LINUX</div>
+        </div>
+        <div class="card">
+            <span class="card-icon">🌐</span>
+            <div class="card-title">Réseaux & Protocoles</div>
+            <p>Conception et configuration de réseaux LAN/WAN, VLAN, routage statique et dynamique. Maîtrise des protocoles TCP/IP, OSPF, et des équipements Cisco.</p>
+            <ul class="card-list">
+                <li>Adressage IPv4 / IPv6 et calcul de sous-réseaux</li>
+                <li>Configuration de routeurs et switchs Cisco</li>
+                <li>Mise en place de VLAN et inter-VLAN routing</li>
+                <li>Routage statique et dynamique (OSPF, RIP)</li>
+                <li>Analyse de trames avec Wireshark</li>
+            </ul>
+            <div class="card-tag">TCP/IP · OSPF · VLAN</div>
+        </div>
+        <div class="card">
+            <span class="card-icon">☁️</span>
+            <div class="card-title">Services & Virtualisation</div>
+            <p>Déploiement de services réseau essentiels (DNS, DHCP, HTTP, FTP). Introduction à la virtualisation avec VMware et VirtualBox.</p>
+            <ul class="card-list">
+                <li>Installation et configuration d'un serveur DNS</li>
+                <li>Mise en place d'un serveur DHCP</li>
+                <li>Déploiement de serveurs web Apache / Nginx</li>
+                <li>Virtualisation avec VirtualBox et VMware</li>
+                <li>Configuration de serveurs FTP et messagerie</li>
+            </ul>
+            <div class="card-tag">DNS · DHCP · VM</div>
+        </div>
+        <div class="card">
+            <span class="card-icon">🔒</span>
+            <div class="card-title">Sécurité des Infrastructures</div>
+            <p>Mise en place de pare-feux, VPN, et politiques de sauvegarde. Analyse des vulnérabilités et sécurisation des accès distants.</p>
+            <ul class="card-list">
+                <li>Configuration d'un pare-feu pfSense</li>
+                <li>Mise en place de tunnels VPN (OpenVPN, IPSec)</li>
+                <li>Détection d'intrusions et analyse des logs</li>
+                <li>Sécurisation des accès SSH et RDP</li>
+                <li>Audit de sécurité et rapport de vulnérabilités</li>
+            </ul>
+            <div class="card-tag">FIREWALL · VPN</div>
+        </div>
+    </div>
+</section>
+
+<!-- COMPÉTENCES -->
+<section class="competences-section">
+    <div class="section-label">Compétences</div>
+    <h2>Ce que vous saurez faire</h2>
+    <div class="comp-grid">
+        <div class="comp-item"><div class="comp-dot"></div><span>Configurer et administrer un serveur Active Directory</span></div>
+        <div class="comp-item"><div class="comp-dot"></div><span>Mettre en place un réseau sécurisé avec VLAN</span></div>
+        <div class="comp-item"><div class="comp-dot"></div><span>Installer et paramétrer des routeurs et switchs</span></div>
+        <div class="comp-item"><div class="comp-dot"></div><span>Déployer un serveur web Apache ou Nginx</span></div>
+        <div class="comp-item"><div class="comp-dot"></div><span>Diagnostiquer une panne réseau avec Wireshark</span></div>
+        <div class="comp-item"><div class="comp-dot"></div><span>Virtualiser des environnements de test</span></div>
+        <div class="comp-item"><div class="comp-dot"></div><span>Configurer un accès VPN sécurisé</span></div>
+        <div class="comp-item"><div class="comp-dot"></div><span>Rédiger une documentation technique professionnelle</span></div>
+    </div>
+</section>
+
+<!-- OUTILS -->
+<section>
+    <div class="section-label">Environnement technologique</div>
+    <h2>Outils & Technologies</h2>
+    <div class="tech-grid">
+        <div class="tech-chip">Cisco Packet Tracer</div>
+        <div class="tech-chip">Windows Server 2022</div>
+        <div class="tech-chip">Ubuntu Server</div>
+        <div class="tech-chip">VirtualBox</div>
+        <div class="tech-chip">VMware</div>
+        <div class="tech-chip">Wireshark</div>
+        <div class="tech-chip">pfSense</div>
+        <div class="tech-chip">Active Directory</div>
+        <div class="tech-chip">Apache / Nginx</div>
+        <div class="tech-chip">SSH / RDP</div>
+        <div class="tech-chip">Git</div>
+        <div class="tech-chip">PowerShell</div>
+        <div class="tech-chip">Bash</div>
+        <div class="tech-chip">IPv4 / IPv6</div>
+    </div>
+</section>
+
+<footer>
+    <span class="footer-brand">// BAC PRO CIEL — CYBERSÉCURITÉ</span>
+    © 2026 — Lycée Édouard Branly
+    <span class="footer-sep">·</span>
+    By TCIEL
+    <span class="footer-sep">·</span>
+    Édouard Branly
+</footer>
+
+</body>
+</html>
