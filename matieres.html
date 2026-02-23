@@ -2,31 +2,1003 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Matières – CIEL</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matières – Bac Pro CIEL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+
+        :root {
+            --cyan: #00f5ff;
+            --blue: #0066ff;
+            --card-bg: rgba(0, 20, 50, 0.6);
+            --glow: 0 0 20px rgba(0, 245, 255, 0.4);
+            --glow-strong: 0 0 40px rgba(0, 245, 255, 0.7);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: #010810;
+            background-image: url('fond-matieres.png');
+            background-size: cover;
+            background-position: center top;
+            background-attachment: fixed;
+            color: #c8e8ff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 17px;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(1,8,16,0.45) 0%, rgba(0,10,30,0.65) 40%, rgba(0,5,20,0.85) 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: -100%;
+            left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+            opacity: 0.3;
+            animation: scan 6s linear infinite;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        @keyframes scan { 0% { top: -2% } 100% { top: 102% } }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            padding: 1rem 2.5rem;
+            background: rgba(1, 8, 16, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 245, 255, 0.15);
+        }
+
+        nav::before {
+            content: 'CIEL//';
+            font-family: 'Orbitron', monospace;
+            font-size: 0.75rem;
+            font-weight: 900;
+            color: var(--cyan);
+            letter-spacing: 4px;
+            margin-right: auto;
+            text-shadow: var(--glow);
+        }
+
+        nav a {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            color: #7ab8d4;
+            text-decoration: none;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 0.3rem 0.8rem;
+            border: 1px solid transparent;
+            transition: all 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--cyan);
+            border-color: rgba(0, 245, 255, 0.4);
+            background: rgba(0, 245, 255, 0.05);
+            text-shadow: var(--glow);
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            position: relative;
+            min-height: 45vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 6rem 5vw 2rem;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(1,8,20,0.7) 40%, transparent 100%);
+            z-index: -1;
+        }
+
+        .hero-badge {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--cyan);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-bottom: 1.2rem;
+            opacity: 0;
+            animation: fadeUp 0.6s 0.2s forwards;
+        }
+
+        .hero-badge span {
+            display: inline-block;
+            width: 30px; height: 1px;
+            background: var(--cyan);
+            vertical-align: middle;
+            margin-right: 10px;
+            box-shadow: var(--glow);
+        }
+
+        .hero-badge .cursor {
+            display: inline-block;
+            width: 8px; height: 13px;
+            background: var(--cyan);
+            vertical-align: middle;
+            margin-left: 4px;
+            animation: blink 1s step-end infinite;
+        }
+
+        .hero h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(2.2rem, 6vw, 5rem);
+            font-weight: 900;
+            line-height: 1.05;
+            color: #fff;
+            text-shadow: 0 0 60px rgba(0,245,255,0.3);
+            max-width: 800px;
+            opacity: 0;
+            animation: fadeUp 0.7s 0.4s forwards;
+        }
+
+        .hero h1 .accent { color: var(--cyan); text-shadow: var(--glow-strong); }
+
+        .hero-sub {
+            font-size: 1.15rem;
+            font-weight: 300;
+            color: #6a9ab8;
+            margin-top: 1.2rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeUp 0.7s 0.6s forwards;
+        }
+
+        .hero-line {
+            width: 120px; height: 2px;
+            background: linear-gradient(90deg, var(--cyan), transparent);
+            margin: 2rem 0;
+            box-shadow: var(--glow);
+            opacity: 0;
+            animation: fadeUp 0.5s 0.8s forwards;
+        }
+
+        .hero-desc {
+            max-width: 520px;
+            color: #7ab3cc;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            opacity: 0;
+            animation: fadeUp 0.7s 1s forwards;
+        }
+
+        /* ─── CLASS SELECTOR ─── */
+        .class-selector {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            padding: 1.5rem 5vw 2rem;
+        }
+
+        .class-card {
+            flex: 1;
+            max-width: 280px;
+            padding: 2.5rem 2rem;
+            background: var(--card-bg);
+            border: 1px solid rgba(0,245,255,0.12);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.35s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .class-card::before {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--blue), var(--cyan));
+            box-shadow: var(--glow);
+            transform: scaleX(0);
+            transition: transform 0.35s;
+        }
+
+        .class-card:hover,
+        .class-card.active {
+            border-color: rgba(0,245,255,0.4);
+            background: rgba(0,35,80,0.75);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(0,245,255,0.15);
+        }
+
+        .class-card:hover::before,
+        .class-card.active::before {
+            transform: scaleX(1);
+        }
+
+        .class-card.active {
+            border-color: var(--cyan);
+            box-shadow: 0 0 30px rgba(0,245,255,0.25), 0 20px 60px rgba(0,0,0,0.4);
+        }
+
+        .class-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .class-card-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .class-card.active .class-card-title {
+            color: var(--cyan);
+            text-shadow: var(--glow);
+        }
+
+        .class-card-sub {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            color: #3a6a86;
+            letter-spacing: 3px;
+            margin-top: 0.4rem;
+            text-transform: uppercase;
+        }
+
+        .class-card.active .class-card-sub {
+            color: #5aadcc;
+        }
+
+        .class-card-badge {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .badge-available {
+            background: rgba(0,245,255,0.1);
+            border: 1px solid rgba(0,245,255,0.3);
+            color: var(--cyan);
+        }
+
+        .badge-soon {
+            background: rgba(100,100,100,0.15);
+            border: 1px solid rgba(150,150,150,0.2);
+            color: #4a5a6a;
+        }
+
+        /* ─── STATS ─── */
+        .stats {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            gap: 0;
+            padding: 0 5vw;
+            margin-bottom: 5rem;
+        }
+
+        .stat {
+            flex: 1;
+            padding: 2rem 1.5rem;
+            border: 1px solid rgba(0,245,255,0.1);
+            border-right: none;
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            text-align: center;
+            opacity: 0;
+            animation: fadeUp 0.6s forwards;
+        }
+
+        .stat:first-child { border-radius: 8px 0 0 8px; }
+        .stat:last-child  { border-right: 1px solid rgba(0,245,255,0.1); border-radius: 0 8px 8px 0; }
+        .stat:nth-child(1) { animation-delay: 1.1s; }
+        .stat:nth-child(2) { animation-delay: 1.2s; }
+        .stat:nth-child(3) { animation-delay: 1.3s; }
+        .stat:nth-child(4) { animation-delay: 1.4s; }
+
+        .stat-num {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--cyan);
+            text-shadow: var(--glow);
+        }
+
+        .stat-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            color: #4a7a96;
+            text-transform: uppercase;
+            margin-top: 0.3rem;
+        }
+
+        /* ─── SECTIONS ─── */
+        section {
+            position: relative;
+            z-index: 1;
+            padding: 5rem 5vw;
+        }
+
+        .section-pro {
+            background: rgba(0, 10, 25, 0.5);
+            border-top: 1px solid rgba(0,245,255,0.08);
+            border-bottom: 1px solid rgba(0,245,255,0.08);
+        }
+
+        .section-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 5px;
+            color: var(--cyan);
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-label::before {
+            content: '';
+            display: inline-block;
+            width: 20px; height: 1px;
+            background: var(--cyan);
+            box-shadow: var(--glow);
+        }
+
+        h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1.4rem, 3vw, 2.2rem);
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 3rem;
+        }
+
+        /* ─── CARDS ─── */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0,245,255,0.1);
+            border-radius: 8px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s;
+            cursor: default;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 3px; height: 100%;
+            background: linear-gradient(180deg, var(--cyan), var(--blue));
+            box-shadow: var(--glow);
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.4s;
+        }
+
+        .card:hover {
+            border-color: rgba(0,245,255,0.3);
+            background: rgba(0,30,70,0.7);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 30px rgba(0,245,255,0.1);
+        }
+
+        .card:hover::before { transform: scaleY(1); }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .card-icon { font-size: 2rem; }
+
+        .card-hours {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: var(--cyan);
+            text-shadow: var(--glow);
+            text-align: right;
+        }
+
+        .card-hours-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.6rem;
+            color: #4a7a96;
+            letter-spacing: 2px;
+            text-align: right;
+            display: block;
+        }
+
+        .card-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.4rem;
+            letter-spacing: 1px;
+        }
+
+        .card-teacher {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.68rem;
+            color: #3a6a86;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(0,245,255,0.06);
+        }
+
+        .card-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+
+        .card-list li {
+            font-size: 0.88rem;
+            color: #4a7a96;
+            padding-left: 1.2rem;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .card-list li::before {
+            content: '›';
+            position: absolute;
+            left: 0;
+            color: var(--cyan);
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+
+        .card-tag {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.2rem 0.7rem;
+            background: rgba(0,245,255,0.08);
+            border: 1px solid rgba(0,245,255,0.2);
+            border-radius: 2px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--cyan);
+            letter-spacing: 2px;
+        }
+
+        /* ─── SUB SELECTOR ─── */
+        .sub-selector {
+            position: relative;
+            z-index: 1;
+            display: none;
+            gap: 2rem;
+            justify-content: center;
+            padding: 0 5vw 3rem;
+        }
+
+        .sub-selector.visible { display: flex; }
+
+        .sub-card {
+            flex: 1;
+            max-width: 320px;
+            padding: 2rem 2rem;
+            background: rgba(0, 15, 40, 0.7);
+            border: 1px solid rgba(0,245,255,0.08);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.35s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sub-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--blue), var(--cyan));
+            box-shadow: var(--glow);
+            transform: scaleX(0);
+            transition: transform 0.35s;
+        }
+
+        .sub-card:hover,
+        .sub-card.active {
+            border-color: rgba(0,245,255,0.35);
+            background: rgba(0,35,80,0.75);
+            transform: translateY(-5px);
+            box-shadow: 0 16px 50px rgba(0,0,0,0.4), 0 0 25px rgba(0,245,255,0.12);
+        }
+
+        .sub-card:hover::after,
+        .sub-card.active::after { transform: scaleX(1); }
+
+        .sub-card.active {
+            border-color: var(--cyan);
+        }
+
+        .sub-card-icon { font-size: 2rem; margin-bottom: 0.7rem; }
+
+        .sub-card-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 2px;
+        }
+
+        .sub-card.active .sub-card-title {
+            color: var(--cyan);
+            text-shadow: var(--glow);
+        }
+
+        .sub-card-count {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            color: #3a6a86;
+            letter-spacing: 3px;
+            margin-top: 0.3rem;
+            text-transform: uppercase;
+        }
+
+        .sub-card.active .sub-card-count { color: #5aadcc; }
+
+        /* ─── COMING SOON ─── */
+        .coming-soon {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 6rem 5vw;
+            display: none;
+        }
+
+        .coming-soon.visible { display: block; }
+
+        .coming-soon-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .coming-soon h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1.4rem, 3vw, 2.2rem);
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .coming-soon p {
+            color: #4a7a96;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+        }
+
+        /* ─── CONTENT PANELS ─── */
+        .content-panel { display: none; }
+        .content-panel.visible { display: block; }
+
+        /* ─── FOOTER ─── */
+        footer {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            z-index: 100;
+            text-align: center;
+            padding: 1.2rem 2rem;
+            border-top: 1px solid rgba(0,245,255,0.2);
+            background: rgba(0,5,15,0.95);
+            backdrop-filter: blur(10px);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.78rem;
+            color: #7ab8d4;
+            letter-spacing: 2px;
+        }
+        body { padding-bottom: 80px; }
+
+        footer .footer-brand {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--cyan);
+            text-shadow: var(--glow);
+            letter-spacing: 4px;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        footer .footer-sep { color: rgba(0,245,255,0.3); margin: 0 0.8rem; }
+
+        .corner { position: absolute; width: 20px; height: 20px; opacity: 0.5; }
+        .corner-tl { top: 1.5rem; left: 1.5rem; border-top: 1px solid var(--cyan); border-left: 1px solid var(--cyan); }
+
+        @media (max-width: 700px) {
+            .cards-grid { grid-template-columns: 1fr; }
+            .stats { flex-direction: column; }
+            .stat { border-right: 1px solid rgba(0,245,255,0.1) !important; border-bottom: none; border-radius: 0 !important; }
+            .stat:first-child { border-radius: 8px 8px 0 0 !important; }
+            .stat:last-child  { border-radius: 0 0 8px 8px !important; border-bottom: 1px solid rgba(0,245,255,0.1) !important; }
+            .class-selector { flex-direction: column; align-items: center; }
+            .class-card { max-width: 100%; width: 100%; }
+        }
+
+    </style>
 </head>
 
-<body class="matieres">
+<body>
 
-<nav class="nav">
+<!-- NAV -->
+<nav>
     <a href="index.html">Accueil</a>
-    <a href="matieres.html">Matières</a>
+    <a href="matieres.html" class="active">Matières</a>
     <a href="projets.html">Projets</a>
 </nav>
 
-<header class="page-header">
-    <h1>Matières enseignées</h1>
-</header>
+<!-- HERO -->
+<div class="hero">
+    <div class="hero-bg"></div>
+    <div class="corner corner-tl"></div>
+    <div class="hero-badge"><span></span>Bac Pro CIEL<div class="cursor"></div></div>
+    <h1>Les <span class="accent">Matières</span></h1>
+    <div class="hero-sub" id="hero-sub-text">Bac Pro CIEL</div>
+    <div class="hero-line"></div>
+</div>
 
-<main class="content">
-    <ul>
-        <li>Cybersécurité</li>
-        <li>Informatique et réseaux</li>
-        <li>Programmation (HTML, CSS, Python)</li>
-        <li>Électronique</li>
-    </ul>
-</main>
+<!-- ═══ NIVEAU 1 : CHOIX DE CLASSE ═══ -->
+<div class="class-selector">
 
-<body class="matieres">
+    <div class="class-card" id="btn-seconde" onclick="selectClass('seconde')">
+        <div class="class-card-icon">🌱</div>
+        <div class="class-card-title">Seconde</div>
+        <div class="class-card-sub">Bac Pro CIEL · Année 1</div>
+        <div class="class-card-badge badge-soon">Bientôt disponible</div>
+    </div>
+
+    <div class="class-card" id="btn-premiere" onclick="selectClass('premiere')">
+        <div class="class-card-icon">⚡</div>
+        <div class="class-card-title">Première</div>
+        <div class="class-card-sub">Bac Pro CIEL · Année 2</div>
+        <div class="class-card-badge badge-soon">Bientôt disponible</div>
+    </div>
+
+    <div class="class-card" id="btn-terminale" onclick="selectClass('terminale')">
+        <div class="class-card-icon">🚀</div>
+        <div class="class-card-title">Terminale</div>
+        <div class="class-card-sub">Bac Pro CIEL · Année 3</div>
+        <div class="class-card-badge badge-available">Disponible</div>
+    </div>
+
+</div>
+
+<!-- ═══ NIVEAU 2 : CHOIX MATIÈRES G / MATIÈRES PRO (Terminale) ═══ -->
+<div class="sub-selector" id="sub-terminale">
+    <div class="sub-card" id="sub-btn-general" onclick="selectSub('terminale','general')">
+        <div class="sub-card-icon">📚</div>
+        <div class="sub-card-title">Matières Générales</div>
+        <div class="sub-card-count">8 matières</div>
+    </div>
+    <div class="sub-card" id="sub-btn-pro" onclick="selectSub('terminale','pro')">
+        <div class="sub-card-icon">🔧</div>
+        <div class="sub-card-title">Matières Pro</div>
+        <div class="sub-card-count">5 matières</div>
+    </div>
+</div>
+
+<!-- COMING SOON SECONDE -->
+<div class="coming-soon" id="coming-seconde">
+    <div class="coming-soon-icon">🌱</div>
+    <h2>Seconde — <span style="color:var(--cyan)">Bientôt disponible</span></h2>
+    <p>L'emploi du temps de Seconde sera ajouté prochainement.</p>
+</div>
+
+<!-- COMING SOON PREMIÈRE -->
+<div class="coming-soon" id="coming-premiere">
+    <div class="coming-soon-icon">⚡</div>
+    <h2>Première — <span style="color:var(--cyan)">Bientôt disponible</span></h2>
+    <p>L'emploi du temps de Première sera ajouté prochainement.</p>
+</div>
+
+<!-- ═══ MATIÈRES GÉNÉRALES TERMINALE ═══ -->
+<div class="content-panel" id="panel-terminale-general">
+    <section>
+        <div class="section-label">Terminale · Enseignements généraux</div>
+        <h2>Matières Générales</h2>
+        <div class="cards-grid">
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">📝</span>
+                    <div><div class="card-hours">2h30</div><span class="card-hours-label">/semaine</span></div>
+                </div>
+                <div class="card-title">Français</div>
+                <ul class="card-list">
+                    <li>Expression écrite : synthèses et comptes-rendus</li>
+                    <li>Expression orale et argumentation</li>
+                    <li>Analyse de documents professionnels</li>
+                    <li>Préparation à l'épreuve de Français du BAC</li>
+                </ul>
+                <div class="card-tag">ÉCRIT · ORAL · BAC</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">📐</span>
+                    <div><div class="card-hours">2h30</div><span class="card-hours-label">/semaine</span></div>
+                </div>
+                <div class="card-title">Mathématiques</div>
+                <ul class="card-list">
+                    <li>Algèbre et fonctions numériques</li>
+                    <li>Arithmétique binaire et hexadécimale</li>
+                    <li>Statistiques et probabilités</li>
+                    <li>Logique combinatoire et algèbre de Boole</li>
+                </ul>
+                <div class="card-tag">ALGÈBRE · LOGIQUE · STATS</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">🌍</span>
+                    <div><div class="card-hours">3h</div><span class="card-hours-label">/semaine</span></div>
+                </div>
+                <div class="card-title">Anglais LV1</div>
+                <ul class="card-list">
+                    <li>Vocabulaire technique informatique et électronique</li>
+                    <li>Lecture de documentations techniques en anglais</li>
+                    <li>Communication professionnelle écrite et orale</li>
+                    <li>Compréhension de tutoriels et supports techniques</li>
+                </ul>
+                <div class="card-tag">TECHNIQUE · ORAL · LV1</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">⚗️</span>
+                    <div><div class="card-hours">1h30</div><span class="card-hours-label">/semaine</span></div>
+                </div>
+                <div class="card-title">Physique-Chimie</div>
+                <ul class="card-list">
+                    <li>Électricité : lois fondamentales et circuits</li>
+                    <li>Courant alternatif, fréquence et tension efficace</li>
+                    <li>Travaux pratiques en laboratoire</li>
+                    <li>Applications aux systèmes électroniques</li>
+                </ul>
+                <div class="card-tag">ÉLECTRICITÉ · TP · CIRCUITS</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">🏃</span>
+                    <div><div class="card-hours">3h</div><span class="card-hours-label">/semaine</span></div>
+                </div>
+                <div class="card-title">Éducation Physique & Sportive</div>
+                <ul class="card-list">
+                    <li>Activités sportives collectives et individuelles</li>
+                    <li>Développement des capacités physiques</li>
+                    <li>Évaluation pratique au BAC</li>
+                </ul>
+                <div class="card-tag">SPORT · EPS · BAC</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">🎨</span>
+                    <div><div class="card-hours">1h</div><span class="card-hours-label">/semaine</span></div>
+                </div>
+                <div class="card-title">Arts Appliqués</div>
+                <ul class="card-list">
+                    <li>Design et communication visuelle</li>
+                    <li>Création graphique et arts visuels</li>
+                    <li>Culture artistique et histoire du design</li>
+                </ul>
+                <div class="card-tag">DESIGN · ARTS · VISUEL</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">🗺️</span>
+                    <div><div class="card-hours">2h</div><span class="card-hours-label">/semaine</span></div>
+                </div>
+                <div class="card-title">Histoire-Géo. EMC</div>
+                <ul class="card-list">
+                    <li>Histoire contemporaine et géopolitique</li>
+                    <li>Géographie économique et mondiale</li>
+                    <li>Enseignement Moral et Civique (EMC)</li>
+                    <li>Préparation à l'épreuve d'Histoire-Géo du BAC</li>
+                </ul>
+                <div class="card-tag">HISTOIRE · GÉO · EMC</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">🌿</span>
+                    <div><div class="card-hours">1h30</div><span class="card-hours-label">/semaine</span></div>
+                </div>
+                <div class="card-title">Prévention Santé Environnement</div>
+                <ul class="card-list">
+                    <li>Santé au travail et risques professionnels</li>
+                    <li>Ergonomie et gestes et postures</li>
+                    <li>Environnement et développement durable</li>
+                </ul>
+                <div class="card-tag">SANTÉ · SÉCURITÉ · ENV.</div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<!-- ═══ MATIÈRES PRO TERMINALE ═══ -->
+<div class="content-panel" id="panel-terminale-pro">
+    <section class="section-pro">
+        <div class="section-label">Terminale · Enseignements professionnels</div>
+        <h2>Matières Professionnelles</h2>
+        <div class="cards-grid">
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">💻</span>
+                    <div><div class="card-hours">6h</div><span class="card-hours-label">/semaine</span></div>
+                </div>
+                <div class="card-title">Informatique & Réseaux</div>
+                <ul class="card-list">
+                    <li>Administration systèmes Windows Server et Linux</li>
+                    <li>Protocoles réseaux : TCP/IP, DNS, DHCP, VLANs</li>
+                    <li>Configuration de routeurs et switchs</li>
+                    <li>Virtualisation avec VMware / VirtualBox</li>
+                    <li>Services web et bases de données</li>
+                </ul>
+                <div class="card-tag">RÉSEAUX · LINUX · CISCO</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">⚡</span>
+                    <div><div class="card-hours">4h</div><span class="card-hours-label">/semaine</span></div>
+                </div>
+                <div class="card-title">ARED (Électronique)</div>
+                <ul class="card-list">
+                    <li>Analyse et réalisation de systèmes électroniques</li>
+                    <li>Électronique analogique et numérique</li>
+                    <li>Programmation de microcontrôleurs</li>
+                    <li>Lecture et câblage de schémas électroniques</li>
+                    <li>Mesures et tests avec oscilloscope et multimètre</li>
+                </ul>
+                <div class="card-tag">ÉLECTRONIQUE · ARDUINO · MESURES</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">🚀</span>
+                    <div><div class="card-hours">1h</div><span class="card-hours-label">/semaine</span></div>
+                </div>
+                <div class="card-title">Réalisation Projet</div>
+                <ul class="card-list">
+                    <li>Conception et réalisation de projets techniques</li>
+                    <li>Gestion de projet : planification, suivi, livrables</li>
+                    <li>Travail en équipe et communication technique</li>
+                    <li>Rédaction de comptes-rendus et documentations</li>
+                </ul>
+                <div class="card-tag">PROJET · GESTION · ÉQUIPE</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">💰</span>
+                    <div><div class="card-hours">1h30</div><span class="card-hours-label">/semaine</span></div>
+                </div>
+                <div class="card-title">Économie-Gestion</div>
+                <ul class="card-list">
+                    <li>Fonctionnement de l'entreprise et des marchés</li>
+                    <li>Droit du travail et contrats professionnels</li>
+                    <li>Gestion financière et comptabilité de base</li>
+                    <li>Insertion professionnelle et recherche d'emploi</li>
+                </ul>
+                <div class="card-tag">ÉCONOMIE · DROIT · GESTION</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-icon">🎯</span>
+                    <div><div class="card-hours">1h</div><span class="card-hours-label">/semaine</span></div>
+                </div>
+                <div class="card-title">Soutien au Parcours</div>
+                <ul class="card-list">
+                    <li>Accompagnement personnalisé et remédiation</li>
+                    <li>Préparation aux épreuves du BAC professionnel</li>
+                    <li>Consolidation des acquis professionnels</li>
+                    <li>Orientation et projet professionnel post-BAC</li>
+                </ul>
+                <div class="card-tag">SOUTIEN · BAC · ORIENTATION</div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<footer>
+    <span class="footer-brand">// BAC PRO CIEL — MATIÈRES</span>
+    © 2026 — Lycée Édouard Branly
+    <span class="footer-sep">·</span>
+    By TCIEL
+    <span class="footer-sep">·</span>
+    Édouard Branly
+</footer>
+
+<script>
+    function selectClass(classe) {
+        // Reset niveau 1
+        document.querySelectorAll('.class-card').forEach(c => c.classList.remove('active'));
+        // Reset niveau 2
+        document.querySelectorAll('.sub-selector').forEach(s => s.classList.remove('visible'));
+        document.querySelectorAll('.sub-card').forEach(s => s.classList.remove('active'));
+        // Reset panels
+        document.querySelectorAll('.content-panel').forEach(p => p.classList.remove('visible'));
+        document.querySelectorAll('.coming-soon').forEach(p => p.classList.remove('visible'));
+
+        document.getElementById('btn-' + classe).classList.add('active');
+
+        if (classe === 'terminale') {
+            document.getElementById('sub-terminale').classList.add('visible');
+            document.getElementById('hero-sub-text').textContent = 'Terminale · Bac Pro CIEL';
+        } else if (classe === 'premiere') {
+            document.getElementById('coming-premiere').classList.add('visible');
+            document.getElementById('hero-sub-text').textContent = 'Première · Bac Pro CIEL';
+        } else if (classe === 'seconde') {
+            document.getElementById('coming-seconde').classList.add('visible');
+            document.getElementById('hero-sub-text').textContent = 'Seconde · Bac Pro CIEL';
+        }
+
+        setTimeout(() => {
+            document.getElementById('btn-' + classe).scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+    }
+
+    function selectSub(classe, type) {
+        // Reset sub buttons for this class
+        document.querySelectorAll('#sub-' + classe + ' .sub-card').forEach(s => s.classList.remove('active'));
+        // Reset panels
+        document.querySelectorAll('.content-panel').forEach(p => p.classList.remove('visible'));
+
+        document.getElementById('sub-btn-' + type).classList.add('active');
+        document.getElementById('panel-' + classe + '-' + type).classList.add('visible');
+
+        setTimeout(() => {
+            document.getElementById('panel-' + classe + '-' + type).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    }
+</script>
+
+</body>
 </html>
+
 
