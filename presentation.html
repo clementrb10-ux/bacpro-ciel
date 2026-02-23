@@ -2,11 +2,53 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Présentation – CIEL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background-image: url('fond-decouvre-filiere.png');
+        }
 
+        .section {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 16rem 2rem 3rem;
+            gap: 2rem;
+        }
 
-<body class="presentation-page">
+        .qr-image {
+            width: 240px;
+            height: 240px;
+            object-fit: contain;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(6px);
+        }
+
+        .scan-text {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: #ffffff;
+            text-shadow:
+                0 0 8px #00f5ff,
+                0 0 20px #00f5ff,
+                0 0 40px rgba(0, 245, 255, 0.6);
+        }
+    </style>
+</head>
+
+<body>
 
 <nav class="nav">
     <a href="index.html">Accueil</a>
@@ -14,61 +56,19 @@
     <a href="projets.html">Projets</a>
 </nav>
 
-<style>
-body{
-    margin:0;
-    font-family:Arial, sans-serif;
-    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-    color:rgba(219, 218, 226, 0.253);
-    text-align:center;
-}
-
-.section{
-    min-height:80vh;      /* prend toute la hauteur de l'écran */
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-end;  /* pousse le contenu vers le bas */
-    align-items:center;
-    padding-bottom:80px;
-}
-
-h1{
-    font-size:40px;
-    margin-bottom:20px;
-}
-
-#qrcode{
-    margin-top:100px;   /* augmente la valeur pour descendre encore plus */
-    display:flex;
-    justify-content:center;
-}
-
-.btn{
-    background:#00c6ff;
-    border:none;
-    padding:15px 30px;
-    font-size:18px;
-    border-radius:30px;
-    cursor:pointer;
-    transition:0.3s;
-}
-
-.btn:hover{
-    background:#0072ff;
-}
-</style>
-</head>
-
-<body>
-
-</script>
-
 <section class="section">
     <img src="qrcode-decouvre.png" alt="QR Code Bac Pro CIEL" class="qr-image">
     <div class="scan-text">
         Scannez le QR Code pour découvrir la filière
     </div>
 </section>
+
+<footer>
+    <span class="footer-brand">// BAC PRO CIEL — PRÉSENTATION</span>
+    © 2026 — Lycée Édouard Branly
+    <span class="footer-sep">·</span>
+    By TCIEL
+</footer>
 
 </body>
 </html>
