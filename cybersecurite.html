@@ -2,21 +2,890 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cybersécurité – Bac Pro CIEL</title>
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+
+        /* ─── VARIABLES ─── */
+        :root {
+            --cyan: #00f5ff;
+            --blue: #0066ff;
+            --dark: #020b18;
+            --darker: #010810;
+            --card-bg: rgba(0, 20, 50, 0.6);
+            --grid: rgba(0, 245, 255, 0.04);
+            --glow: 0 0 20px rgba(0, 245, 255, 0.4);
+            --glow-strong: 0 0 40px rgba(0, 245, 255, 0.7);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        /* ─── BODY ─── */
+        body {
+            background-color: #010810;
+            background-image: url('fond-cyber.png');
+            background-size: cover;
+            background-position: center top;
+            background-attachment: fixed;
+            color: #c8e8ff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 17px;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ─── OVERLAY ─── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(
+                180deg,
+                rgba(1, 8, 16, 0.45) 0%,
+                rgba(0, 10, 30, 0.65) 40%,
+                rgba(0, 5, 20, 0.85) 100%
+            );
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ─── SCAN LINE ─── */
+        body::after {
+            content: '';
+            position: fixed;
+            top: -100%;
+            left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+            opacity: 0.3;
+            animation: scan 6s linear infinite;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        /* ─── ANIMATIONS ─── */
+        @keyframes scan {
+            0%   { top: -2% }
+            100% { top: 102% }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0; }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            padding: 1rem 2.5rem;
+            background: rgba(1, 8, 16, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 245, 255, 0.15);
+        }
+
+        nav::before {
+            content: 'CIEL//';
+            font-family: 'Orbitron', monospace;
+            font-size: 0.75rem;
+            font-weight: 900;
+            color: var(--cyan);
+            letter-spacing: 4px;
+            margin-right: auto;
+            text-shadow: var(--glow);
+        }
+
+        nav a {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            color: #7ab8d4;
+            text-decoration: none;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 0.3rem 0.8rem;
+            border: 1px solid transparent;
+            transition: all 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--cyan);
+            border-color: rgba(0, 245, 255, 0.4);
+            background: rgba(0, 245, 255, 0.05);
+            text-shadow: var(--glow);
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 6rem 5vw 4rem;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(1, 8, 20, 0.7) 40%, transparent 100%);
+            z-index: -1;
+        }
+
+        .hero-badge {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--cyan);
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-bottom: 1.2rem;
+            opacity: 0;
+            animation: fadeUp 0.6s 0.2s forwards;
+        }
+
+        .hero-badge span {
+            display: inline-block;
+            width: 30px;
+            height: 1px;
+            background: var(--cyan);
+            vertical-align: middle;
+            margin-right: 10px;
+            box-shadow: var(--glow);
+        }
+
+        .hero-badge .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 13px;
+            background: var(--cyan);
+            vertical-align: middle;
+            margin-left: 4px;
+            animation: blink 1s step-end infinite;
+        }
+
+        .hero h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(2.2rem, 6vw, 5rem);
+            font-weight: 900;
+            line-height: 1.05;
+            color: #fff;
+            text-shadow: 0 0 60px rgba(0, 245, 255, 0.3);
+            max-width: 800px;
+            opacity: 0;
+            animation: fadeUp 0.7s 0.4s forwards;
+        }
+
+        .hero h1 .accent {
+            color: var(--cyan);
+            text-shadow: var(--glow-strong);
+        }
+
+        .hero-sub {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 300;
+            color: #6a9ab8;
+            margin-top: 1.2rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeUp 0.7s 0.6s forwards;
+        }
+
+        .hero-line {
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cyan), transparent);
+            margin: 2rem 0;
+            box-shadow: var(--glow);
+            opacity: 0;
+            animation: fadeUp 0.5s 0.8s forwards;
+        }
+
+        .hero-desc {
+            max-width: 520px;
+            color: #7ab3cc;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            opacity: 0;
+            animation: fadeUp 0.7s 1s forwards;
+        }
+
+        /* ─── THREAT BADGE ─── */
+        .threat-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-top: 2rem;
+            padding: 0.5rem 1.2rem;
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            border-radius: 3px;
+            background: rgba(0, 245, 255, 0.05);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--cyan);
+            letter-spacing: 2px;
+            opacity: 0;
+            animation: fadeUp 0.6s 1.2s forwards;
+        }
+
+        .threat-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--cyan);
+            box-shadow: var(--glow);
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        /* ─── STATS STRIP ─── */
+        .stats {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            gap: 0;
+            padding: 0 5vw;
+            margin-bottom: 5rem;
+        }
+
+        .stat {
+            flex: 1;
+            padding: 2rem 1.5rem;
+            border: 1px solid rgba(0, 245, 255, 0.1);
+            border-right: none;
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            text-align: center;
+            opacity: 0;
+            animation: fadeUp 0.6s forwards;
+        }
+
+        .stat:first-child { border-radius: 8px 0 0 8px; }
+        .stat:last-child  { border-right: 1px solid rgba(0, 245, 255, 0.1); border-radius: 0 8px 8px 0; }
+        .stat:nth-child(1) { animation-delay: 1.1s; }
+        .stat:nth-child(2) { animation-delay: 1.2s; }
+        .stat:nth-child(3) { animation-delay: 1.3s; }
+        .stat:nth-child(4) { animation-delay: 1.4s; }
+
+        .stat-num {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--cyan);
+            text-shadow: var(--glow);
+        }
+
+        .stat-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            color: #4a7a96;
+            text-transform: uppercase;
+            margin-top: 0.3rem;
+        }
+
+        /* ─── SECTIONS ─── */
+        section {
+            position: relative;
+            z-index: 1;
+            padding: 5rem 5vw;
+        }
+
+        .section-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 5px;
+            color: var(--cyan);
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-label::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 1px;
+            background: var(--cyan);
+            box-shadow: var(--glow);
+        }
+
+        h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(1.4rem, 3vw, 2.2rem);
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 3rem;
+        }
+
+        /* ─── CARDS GRILLE ─── */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 245, 255, 0.1);
+            border-radius: 8px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s;
+            cursor: default;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--cyan), var(--blue));
+            box-shadow: var(--glow);
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.4s;
+        }
+
+        .card:hover {
+            border-color: rgba(0, 245, 255, 0.3);
+            background: rgba(0, 30, 70, 0.7);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 245, 255, 0.1);
+        }
+
+        .card:hover::before { transform: scaleY(1); }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .card-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .card p {
+            color: #5a8ca8;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .card-list {
+            list-style: none;
+            margin-top: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+
+        .card-list li {
+            font-size: 0.88rem;
+            color: #4a7a96;
+            padding-left: 1.2rem;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .card-list li::before {
+            content: '›';
+            position: absolute;
+            left: 0;
+            color: var(--cyan);
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+
+        .card-tag {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.2rem 0.7rem;
+            background: rgba(0, 245, 255, 0.08);
+            border: 1px solid rgba(0, 245, 255, 0.2);
+            border-radius: 2px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--cyan);
+            letter-spacing: 2px;
+        }
+
+        /* ─── COMPÉTENCES ─── */
+        .competences-section {
+            background: rgba(0, 10, 25, 0.5);
+            border-top: 1px solid rgba(0, 245, 255, 0.08);
+            border-bottom: 1px solid rgba(0, 245, 255, 0.08);
+        }
+
+        .comp-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .comp-item {
+            padding: 1.2rem 1.5rem;
+            border: 1px solid rgba(0, 245, 255, 0.08);
+            border-radius: 6px;
+            background: rgba(0, 15, 40, 0.4);
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            transition: all 0.3s;
+        }
+
+        .comp-item:hover {
+            border-color: rgba(0, 245, 255, 0.25);
+            background: rgba(0, 25, 60, 0.5);
+        }
+
+        .comp-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--cyan);
+            box-shadow: var(--glow);
+            flex-shrink: 0;
+            margin-top: 7px;
+        }
+
+        .comp-item span {
+            font-size: 0.95rem;
+            color: #8ab8cc;
+        }
+
+        /* ─── TECH CHIPS ─── */
+        .tech-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .tech-chip {
+            padding: 0.5rem 1.2rem;
+            border: 1px solid rgba(0, 245, 255, 0.2);
+            border-radius: 3px;
+            background: rgba(0, 245, 255, 0.04);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--cyan);
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+
+        .tech-chip:hover {
+            background: rgba(0, 245, 255, 0.12);
+            box-shadow: var(--glow);
+        }
+
+        /* ─── PARCOURS ─── */
+        .parcours-section {
+            position: relative;
+            z-index: 1;
+            padding: 5rem 5vw;
+            background: rgba(0, 5, 15, 0.6);
+            border-top: 1px solid rgba(0, 245, 255, 0.08);
+        }
+
+        .parcours-banner {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            padding: 1.8rem 2rem;
+            border: 1px solid rgba(0, 245, 255, 0.25);
+            border-left: 4px solid var(--cyan);
+            border-radius: 6px;
+            background: rgba(0, 245, 255, 0.04);
+            margin-bottom: 3rem;
+        }
+
+        .parcours-icon {
+            font-size: 1.8rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .parcours-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--cyan);
+            letter-spacing: 1px;
+            margin-bottom: 0.6rem;
+            text-shadow: var(--glow);
+        }
+
+        .parcours-text p {
+            color: #6a9ab8;
+            font-size: 0.98rem;
+            line-height: 1.8;
+        }
+
+        .parcours-text strong {
+            color: #c8e8ff;
+        }
+
+        .parcours-grid {
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+        }
+
+        .parcours-step {
+            flex: 1;
+            padding: 2rem 1.5rem;
+            border: 1px solid rgba(0, 245, 255, 0.1);
+            background: var(--card-bg);
+            backdrop-filter: blur(8px);
+            border-radius: 8px;
+            display: flex;
+            gap: 1.2rem;
+            align-items: flex-start;
+            transition: all 0.3s;
+        }
+
+        .parcours-step.active {
+            border-color: rgba(0, 245, 255, 0.3);
+            background: rgba(0, 30, 70, 0.65);
+        }
+
+        .parcours-step:hover {
+            border-color: rgba(0, 245, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(0, 245, 255, 0.08);
+        }
+
+        .step-num {
+            font-family: 'Orbitron', monospace;
+            font-size: 2rem;
+            font-weight: 900;
+            color: rgba(0, 245, 255, 0.2);
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .parcours-step.active .step-num {
+            color: var(--cyan);
+            text-shadow: var(--glow);
+        }
+
+        .step-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.6rem;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+
+        .step-years {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--cyan);
+            background: rgba(0, 245, 255, 0.08);
+            border: 1px solid rgba(0, 245, 255, 0.2);
+            border-radius: 2px;
+            padding: 0.1rem 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        .step-content p {
+            color: #4a7a96;
+            font-size: 0.88rem;
+            line-height: 1.7;
+        }
+
+        .step-tag {
+            display: inline-block;
+            margin-top: 0.8rem;
+            padding: 0.2rem 0.7rem;
+            background: rgba(0, 245, 255, 0.06);
+            border: 1px solid rgba(0, 245, 255, 0.15);
+            border-radius: 2px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--cyan);
+            letter-spacing: 2px;
+        }
+
+        .parcours-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 0.8rem;
+            font-size: 2rem;
+            color: rgba(0, 245, 255, 0.3);
+            flex-shrink: 0;
+        }
+
+        /* ─── FOOTER ─── */
+        footer {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(0, 245, 255, 0.08);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.75rem;
+            color: #2a4a60;
+            letter-spacing: 2px;
+        }
+
+        /* ─── COIN DÉCORATIF ─── */
+        .corner {
+            position: absolute;
+            width: 20px; height: 20px;
+            opacity: 0.5;
+        }
+        .corner-tl { top: 1.5rem; left: 1.5rem; border-top: 1px solid var(--cyan); border-left: 1px solid var(--cyan); }
+        .corner-br { bottom: 1.5rem; right: 1.5rem; border-bottom: 1px solid var(--cyan); border-right: 1px solid var(--cyan); }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 800px) {
+            .parcours-grid { flex-direction: column; }
+            .parcours-arrow { transform: rotate(90deg); padding: 0.3rem 0; align-self: center; }
+            .parcours-banner { flex-direction: column; gap: 0.8rem; }
+        }
+
+        @media (max-width: 700px) {
+            .comp-grid { grid-template-columns: 1fr; }
+            .stats { flex-direction: column; }
+            .stat { border-right: 1px solid rgba(0, 245, 255, 0.1) !important; border-bottom: none; border-radius: 0 !important; }
+            .stat:first-child { border-radius: 8px 8px 0 0 !important; }
+            .stat:last-child  { border-radius: 0 0 8px 8px !important; border-bottom: 1px solid rgba(0, 245, 255, 0.1) !important; }
+        }
+
+    </style>
 </head>
 
-<body class="cyber">
+<body>
 
-<nav class="nav">
+<!-- NAV -->
+<nav>
     <a href="index.html">Accueil</a>
     <a href="matieres.html">Matières</a>
     <a href="projets.html">Projets</a>
 </nav>
 
-<header class="page-header">
-    <h1></h1>
-</header>
+<!-- HERO -->
+<div class="hero">
+    <div class="hero-bg"></div>
+    <div class="corner corner-tl"></div>
 
-</body class="cyber">
+    <div class="hero-badge"><span></span>Module 01 — Spécialité<div class="cursor"></div></div>
+    <h1><span class="accent">Cyber</span>sécurité</h1>
+    <div class="hero-sub">Bac Pro CIEL — Protection des systèmes</div>
+    <div class="hero-line"></div>
+    <p class="hero-desc">
+        Apprenez à défendre les infrastructures numériques, analyser les menaces,
+        et mettre en place des stratégies de sécurité adaptées aux environnements professionnels réels.
+    </p>
+    <div class="threat-badge">
+        <div class="threat-dot"></div>
+        NIVEAU DE MENACE MONDIAL : ÉLEVÉ
+    </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+    <div class="stat">
+        <div class="stat-num">+300%</div>
+        <div class="stat-label">Cyberattaques en 3 ans</div>
+    </div>
+    <div class="stat">
+        <div class="stat-num">40k</div>
+        <div class="stat-label">Emplois non pourvus en France</div>
+    </div>
+    <div class="stat">
+        <div class="stat-num">CIA</div>
+        <div class="stat-label">Triade de sécurité</div>
+    </div>
+    <div class="stat">
+        <div class="stat-num">0day</div>
+        <div class="stat-label">Vulnérabilités étudiées</div>
+    </div>
+</div>
+
+<!-- DOMAINES -->
+<section>
+    <div class="section-label">Domaines</div>
+    <h2>Axes de formation</h2>
+    <div class="cards-grid">
+
+        <div class="card">
+            <span class="card-icon">🛡️</span>
+            <div class="card-title">Sécurité Défensive</div>
+            <p>Mise en place de mécanismes de protection pour sécuriser les systèmes et réseaux contre les intrusions et les attaques.</p>
+            <ul class="card-list">
+                <li>Configuration de pare-feux et règles de filtrage</li>
+                <li>Déploiement de systèmes de détection d'intrusions (IDS/IPS)</li>
+                <li>Gestion des mises à jour et correctifs de sécurité</li>
+                <li>Mise en place de politiques de mots de passe</li>
+                <li>Surveillance des journaux systèmes (logs)</li>
+            </ul>
+            <div class="card-tag">DEFENSE · IDS · FIREWALL</div>
+        </div>
+
+        <div class="card">
+            <span class="card-icon">⚔️</span>
+            <div class="card-title">Sécurité Offensive</div>
+            <p>Apprentissage des techniques d'attaque pour mieux comprendre et anticiper les menaces pesant sur les infrastructures.</p>
+            <ul class="card-list">
+                <li>Tests d'intrusion (Pentesting) en environnement contrôlé</li>
+                <li>Reconnaissance et collecte d'informations (OSINT)</li>
+                <li>Exploitation de vulnérabilités connues (CVE)</li>
+                <li>Attaques par force brute et injection SQL</li>
+                <li>Rédaction de rapports d'audit de sécurité</li>
+            </ul>
+            <div class="card-tag">PENTEST · OSINT · CVE</div>
+        </div>
+
+        <div class="card">
+            <span class="card-icon">🔐</span>
+            <div class="card-title">Cryptographie & Identité</div>
+            <p>Maîtrise des mécanismes de chiffrement et d'authentification pour protéger les données et les accès aux systèmes.</p>
+            <ul class="card-list">
+                <li>Chiffrement symétrique (AES) et asymétrique (RSA)</li>
+                <li>Infrastructure à clé publique (PKI) et certificats SSL/TLS</li>
+                <li>Authentification multi-facteurs (MFA / 2FA)</li>
+                <li>Gestion des identités et des accès (IAM)</li>
+                <li>Hachage et intégrité des données (SHA, MD5)</li>
+            </ul>
+            <div class="card-tag">AES · RSA · PKI · TLS</div>
+        </div>
+
+        <div class="card">
+            <span class="card-icon">🧩</span>
+            <div class="card-title">Analyse des Menaces</div>
+            <p>Identification, analyse et réponse aux incidents de sécurité grâce aux outils de forensique et de veille cyber.</p>
+            <ul class="card-list">
+                <li>Analyse de malwares et reverse engineering basique</li>
+                <li>Investigation forensique sur des systèmes compromis</li>
+                <li>Veille sur les nouvelles vulnérabilités (CVE, NVD)</li>
+                <li>Réponse à incident et plan de reprise (PRA/PCA)</li>
+                <li>Utilisation de plateformes CTF (Capture The Flag)</li>
+            </ul>
+            <div class="card-tag">FORENSIC · MALWARE · CTF</div>
+        </div>
+
+    </div>
+</section>
+
+<!-- COMPÉTENCES -->
+<section class="competences-section">
+    <div class="section-label">Compétences</div>
+    <h2>Ce que vous saurez faire</h2>
+    <div class="comp-grid">
+        <div class="comp-item"><div class="comp-dot"></div><span>Réaliser un audit de sécurité d'un système d'information</span></div>
+        <div class="comp-item"><div class="comp-dot"></div><span>Configurer et superviser un pare-feu pfSense</span></div>
+        <div class="comp-item"><div class="comp-dot"></div><span>Effectuer un test d'intrusion basique (Kali Linux)</span></div>
+        <div class="comp-item"><div class="comp-dot"></div><span>Mettre en place une politique de sécurité réseau</span></div>
+        <div class="comp-item"><div class="comp-dot"></div><span>Détecter et analyser une intrusion avec Snort / Suricata</span></div>
+        <div class="comp-item"><div class="comp-dot"></div><span>Chiffrer des communications avec SSL/TLS et VPN</span></div>
+        <div class="comp-item"><div class="comp-dot"></div><span>Analyser des fichiers suspects et traces forensiques</span></div>
+        <div class="comp-item"><div class="comp-dot"></div><span>Rédiger un rapport d'incident et plan de remédiation</span></div>
+    </div>
+</section>
+
+<!-- OUTILS -->
+<section>
+    <div class="section-label">Environnement technologique</div>
+    <h2>Outils & Technologies</h2>
+    <div class="tech-grid">
+        <div class="tech-chip">Kali Linux</div>
+        <div class="tech-chip">Metasploit</div>
+        <div class="tech-chip">Nmap</div>
+        <div class="tech-chip">Burp Suite</div>
+        <div class="tech-chip">Wireshark</div>
+        <div class="tech-chip">pfSense</div>
+        <div class="tech-chip">Snort / Suricata</div>
+        <div class="tech-chip">OpenSSL</div>
+        <div class="tech-chip">Hashcat</div>
+        <div class="tech-chip">John the Ripper</div>
+        <div class="tech-chip">OWASP ZAP</div>
+        <div class="tech-chip">Splunk</div>
+        <div class="tech-chip">Hydra</div>
+        <div class="tech-chip">VirtualBox</div>
+        <div class="tech-chip">TryHackMe / HTB</div>
+    </div>
+</section>
+
+<!-- PARCOURS -->
+<section class="parcours-section">
+    <div class="section-label">Parcours</div>
+    <h2>Et après le Bac Pro ?</h2>
+    <div class="parcours-banner">
+        <div class="parcours-icon">⚠️</div>
+        <div class="parcours-text">
+            <div class="parcours-title">La cybersécurité approfondie commence après le Bac Pro</div>
+            <p>Durant les 3 années du Bac Pro CIEL, vous acquérez les <strong>bases solides</strong> en réseaux, systèmes et sécurité informatique. Mais la spécialisation complète en cybersécurité — pentest avancé, cryptographie, forensique, SOC — ne s'aborde véritablement qu'en <strong>BTS</strong> ou en formations supérieures.</p>
+        </div>
+    </div>
+
+    <div class="parcours-grid">
+        <div class="parcours-step active">
+            <div class="step-num">1</div>
+            <div class="step-content">
+                <div class="step-title">Bac Pro CIEL <span class="step-years">3 ans</span></div>
+                <p>Introduction aux réseaux, systèmes, et premiers concepts de sécurité. Bases du pentest, pare-feux, et cryptographie.</p>
+                <div class="step-tag">BASES · INITIATION</div>
+            </div>
+        </div>
+        <div class="parcours-arrow">›</div>
+        <div class="parcours-step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+                <div class="step-title">BTS <span class="step-years">2 ans</span></div>
+                <p>Spécialisation en infrastructure et sécurité des réseaux. Pentest, supervision, Active Directory avancé, gestion des incidents.</p>
+                <div class="step-tag">SPÉCIALISATION · CYBER</div>
+            </div>
+        </div>
+        <div class="parcours-arrow">›</div>
+        <div class="parcours-step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+                <div class="step-title">Bachelor / Licence Pro <span class="step-years">1 an</span></div>
+                <p>Expert en cybersécurité, analyste SOC, consultant en sécurité. Maîtrise complète des outils offensifs et défensifs.</p>
+                <div class="step-tag">EXPERT · SOC · PENTEST</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <span class="footer-brand">// BAC PRO CIEL — CYBERSÉCURITÉ</span>
+    © 2026 — Lycée Édouard Branly
+    <span class="footer-sep">·</span>
+    By TCIEL
+    <span class="footer-sep">·</span>
+    Édouard Branly
+</footer>
+
+</body>
 </html>
